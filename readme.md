@@ -2,5 +2,5 @@
 
 common terminal commands:
 
-* `make watch`
+* `pytest`
 * `heroku local`

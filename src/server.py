@@ -10,7 +10,7 @@ def index():
 
 @app.route('/ping')
 def ping():
-    return 'ping'
+    return 'pang'
 
 
 if __name__ == '__main__':
