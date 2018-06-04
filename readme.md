@@ -3,3 +3,4 @@
 common terminal commands:
 
 * `pytest`
+* `heroku local`
