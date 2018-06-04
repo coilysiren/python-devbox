@@ -10,4 +10,4 @@ def index():
 
 @app.route('/ping')
 def ping():
-    return 'ponadwwag'
+    return 'pong'
