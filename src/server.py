@@ -8,5 +8,10 @@ def index():
     return 'hello world!!'
 
 
+@app.route('/ping')
+def ping():
+    return 'ping'
+
+
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)
