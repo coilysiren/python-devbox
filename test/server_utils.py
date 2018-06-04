@@ -13,8 +13,8 @@ def with_active_server(func):
         try:
             func()
         except Exception:
-            pass
-        _kill_server_processes()
+            _kill_server_processes()
+            raise
     return wrapper
 
 
