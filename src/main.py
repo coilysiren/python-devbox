@@ -4,7 +4,3 @@ def main():
 
 def test_main():
     assert main() == 20
-
-
-def test_main_failing():
-    assert main() == 10
