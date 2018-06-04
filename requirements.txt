@@ -1,3 +1,9 @@
-pytest
+# application
 flask
+
+# tests
+pytest
+pytest-watch
+
+# operations
 gunicorn
