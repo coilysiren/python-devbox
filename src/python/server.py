@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
@@ -8,6 +8,6 @@ def index():
     return 'hello world!!'
 
 
-@app.route('/ping')
+@app.route('/api/ping')
 def ping():
-    return 'pong'
+    return jsonify({'data': 'pong'})

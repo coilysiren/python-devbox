@@ -9,4 +9,4 @@ __dev-angular:
 	npx ng serve --port 4200
 
 __dev-flask:
-	FLASK_APP=src/python/server flask run --port 3000
+	FLASK_ENV=development FLASK_APP=src/python/server flask run --port 3000

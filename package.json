@@ -8,6 +8,10 @@
   },
   "author": "Lynn Cyrin",
   "homepage": "https://github.com/lynncyrin/python-devbox",
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
   "dependencies": {
     "@angular/animations": "^6.0.3",
     "@angular/common": "^6.0.3",
