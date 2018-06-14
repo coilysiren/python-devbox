@@ -1,5 +1,6 @@
 # application
 flask
+python-dotenv
 
 # tests
 pytest
