@@ -49,7 +49,6 @@ export class AppComponent {
 
   public updateTodos(): void {
     this.http.get('/api/todos').subscribe((response: any) => {
-      console.log(response);
       this.todos = response[0];
       this.repeats = response[1];
     });
