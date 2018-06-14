@@ -3,6 +3,7 @@ flask server, and optional helper code
 """
 
 import os
+import sys
 import collections
 
 from flask import Flask, jsonify, request
@@ -17,6 +18,10 @@ app.secret_key = os.environ['SECRET_KEY']
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/pythondevbox_v3.db'
 db = SQLAlchemy(app)
 api = Api(app)
+
+
+def errorLog(log):
+    print(f'[LOG] {log}', file=sys.stderr)
 
 
 class TodoModel(db.Model):
@@ -51,25 +56,20 @@ class TodoListResource(Resource):
             ]
             repeats = [item for item, count in collections.Counter(
                 priorities).items() if count > 1]
-            print(' [results, repeats]',  [results, repeats])
             return [results, repeats]
         except BaseException as e:
-            print('BaseException')
-            print(e)
+            errorLog(e)
             return '', 500
 
     def post(self):
         try:
             data = request.get_json()
-            print('data', data)
             todo = TodoModel(**data)
             db.session.add(todo)
             db.session.commit()
-
             return '', 201
         except BaseException as e:
-            print('BaseException')
-            raise e
+            errorLog(e)
             return '', 500
 
 
