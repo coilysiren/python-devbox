@@ -30,8 +30,6 @@ class TodoModel(db.Model):
 class TodoResource(Resource):
 
     def delete(self, todo_id):
-        print('TodoModel.query.filter_by(id=todo_id)')
-        print(TodoModel.query.filter_by(id=todo_id))
         TodoModel.query.filter_by(id=todo_id).delete()
         db.session.commit()
         return '', 204
