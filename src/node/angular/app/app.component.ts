@@ -22,14 +22,14 @@ export class AppComponent {
   public async createTodo(
     event: Event,
     contentInput: NgModel,
-    priortyInput: NgModel,
+    priorityInput: NgModel,
   ): Promise<void> {
     event.preventDefault();
     if (contentInput.valid) {
       this.http
         .post('/api/todos', {
           content: contentInput.value,
-          priority: priortyInput.value,
+          priority: priorityInput.value,
         })
         .subscribe(() => {
           // update todo list after you add this todo
@@ -37,7 +37,7 @@ export class AppComponent {
         });
     }
     contentInput.reset();
-    priortyInput.reset();
+    priorityInput.reset();
   }
 
   public async deleteTodo(id: string): Promise<void> {
