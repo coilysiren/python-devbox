@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { NgModel } from '@angular/forms';
 
 interface ITodo {
   content: string;
@@ -17,14 +18,17 @@ export class AppComponent {
     this.updateTodos();
   }
 
-  public async createTodo(event: Event, content: string): Promise<void> {
+  public async createTodo(event: Event, contentInput: NgModel): Promise<void> {
     event.preventDefault();
-    if (content) {
-      this.http.post('/api/todos', { data: content }).subscribe(() => {
-        // update todo list after you add this todo
-        this.updateTodos();
-      });
+    if (contentInput.valid) {
+      this.http
+        .post('/api/todos', { data: contentInput.value })
+        .subscribe(() => {
+          // update todo list after you add this todo
+          this.updateTodos();
+        });
     }
+    contentInput.reset();
   }
 
   public async deleteTodo(id: string): Promise<void> {

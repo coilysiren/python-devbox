@@ -7,10 +7,10 @@
 
     <form action="#">
       <div class="form-group">
-        <textarea #contentInput="ngModel" required id="contentInput" name="contentInput" class="form-control" placeholder="Add your todo" rows="3" (blur)="createTodo($event, contentInput.value);" ngModel ></textarea>
+        <textarea #contentInput="ngModel" required id="contentInput" name="contentInput" class="form-control" placeholder="Add your todo" rows="3" (blur)="createTodo($event, contentInput);" (keydown.meta.enter)="createTodo($event, contentInput);" ngModel ></textarea>
       </div>
 
-      <input class="btn btn-primary btn-block" value="save" type="submit" (click)="createTodo($event, contentInput.value);" />
+      <input class="btn btn-primary btn-block" value="save" type="submit" (click)="createTodo($event, contentInput);" />
     </form>
 
     <hr class="my-4">
