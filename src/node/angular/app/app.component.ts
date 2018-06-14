@@ -13,22 +13,31 @@ interface ITodo {
 })
 export class AppComponent {
   public todos: ITodo[];
+  public repeats: string[];
 
   constructor(private http: HttpClient) {
     this.updateTodos();
   }
 
-  public async createTodo(event: Event, contentInput: NgModel): Promise<void> {
+  public async createTodo(
+    event: Event,
+    contentInput: NgModel,
+    priortyInput: NgModel,
+  ): Promise<void> {
     event.preventDefault();
     if (contentInput.valid) {
       this.http
-        .post('/api/todos', { data: contentInput.value })
+        .post('/api/todos', {
+          content: contentInput.value,
+          priority: priortyInput.value,
+        })
         .subscribe(() => {
           // update todo list after you add this todo
           this.updateTodos();
         });
     }
     contentInput.reset();
+    priortyInput.reset();
   }
 
   public async deleteTodo(id: string): Promise<void> {
@@ -40,7 +49,9 @@ export class AppComponent {
 
   public updateTodos(): void {
     this.http.get('/api/todos').subscribe((response: any) => {
-      this.todos = response;
+      console.log(response);
+      this.todos = response[0];
+      this.repeats = response[1];
     });
   }
 }

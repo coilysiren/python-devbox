@@ -7,17 +7,27 @@
 
     <form action="#">
       <div class="form-group">
-        <textarea #contentInput="ngModel" required id="contentInput" name="contentInput" class="form-control" placeholder="Add your todo" rows="3" (keydown.meta.enter)="createTodo($event, contentInput);" ngModel ></textarea>
+        <textarea #contentInput="ngModel" required id="contentInput" name="contentInput" class="form-control" placeholder="Add your todo" rows="3" (keydown.meta.enter)="createTodo($event, contentInput, priorityInput);" ngModel ></textarea>
+        <input id="priorityInput" class="form-control" min="0" type="number" name="priorityInput" #priorityInput="ngModel" name="priorityInput" ngModel placeholder="priority number">
       </div>
 
-      <input class="btn btn-primary btn-block" value="save" type="submit" (click)="createTodo($event, contentInput);" />
+      <input class="btn btn-primary btn-block" value="save" type="submit" (click)="createTodo($event, contentInput, priorityInput);" />
+
     </form>
+
+    <hr class="my-4">
+
+    <div class="card" *ngFor="let repeat of repeats">
+      <div class="card-body">
+        <p class="card-text">Repeat priority: {{ repeat }}</p>
+      </div>
+    </div>
 
     <hr class="my-4">
 
     <div class="card" *ngFor="let todo of todos">
       <div class="card-body">
-        <h6 class="card-subtitle mb-2 text-muted">Todo {{ todo.id }}</h6>
+        <h6 class="card-subtitle mb-2 text-muted">Todo {{ todo.id }} :: Priority {{ todo.priority }} <span *ngIf="todo.repeated" class="btn btn-warning">repeated!</span></h6>
         <p class="card-text">{{ todo.content }}</p>
         <button class="card-link btn btn-danger" (click)="deleteTodo(todo.id);">Delete</button>
       </div>

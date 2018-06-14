@@ -3,6 +3,7 @@ flask server, and optional helper code
 """
 
 import os
+import collections
 
 from flask import Flask, jsonify, request
 from dotenv import load_dotenv, find_dotenv
@@ -13,13 +14,14 @@ from flask_restful import Resource, Api
 load_dotenv(find_dotenv())
 app = Flask(__name__)
 app.secret_key = os.environ['SECRET_KEY']
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/pythondevbox.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/pythondevbox_v3.db'
 db = SQLAlchemy(app)
 api = Api(app)
 
 
 class TodoModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    priority = db.Column(db.String)
     content = db.Column(db.String)
 
     @property
@@ -38,17 +40,37 @@ class TodoResource(Resource):
 class TodoListResource(Resource):
 
     def get(self):
-        return [
-            todo.as_dict
-            for todo in TodoModel.query.all()
-        ]
+        try:
+            results = [
+                todo.as_dict
+                for todo in TodoModel.query.all()
+            ]
+            priorities = [
+                result['priority']
+                for result in results
+            ]
+            repeats = [item for item, count in collections.Counter(
+                priorities).items() if count > 1]
+            print(' [results, repeats]',  [results, repeats])
+            return [results, repeats]
+        except BaseException as e:
+            print('BaseException')
+            print(e)
+            return '', 500
 
     def post(self):
-        data = request.get_json()
-        todo = TodoModel(content=data['data'])
-        db.session.add(todo)
-        db.session.commit()
-        return '', 201
+        try:
+            data = request.get_json()
+            print('data', data)
+            todo = TodoModel(**data)
+            db.session.add(todo)
+            db.session.commit()
+
+            return '', 201
+        except BaseException as e:
+            print('BaseException')
+            raise e
+            return '', 500
 
 
 @app.route('/')
