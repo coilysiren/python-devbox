@@ -1,6 +1,8 @@
 # application
 flask
 python-dotenv
+flask_sqlalchemy
+flask_restful
 
 # tests
 pytest
