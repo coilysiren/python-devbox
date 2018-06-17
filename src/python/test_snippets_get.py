@@ -56,6 +56,12 @@ def test_get_snippets_also_shows_current_users_unshared_snippets(app, session):
 
 
 def test_get_snippets_default_to_TODO(app, session):
-    # TODO, determine default for share status
-    # TODO, sync with product manager
-    pass
+    # TODO, sync with product manager RE default share state
+    # setup
+    session.add(SnippetModel())
+    session.commit()
+    # function under test
+    response = app.get('/snippets')
+    # assertion
+    assert len(json_body(response)) == 1
+    assert response.status_code == 200

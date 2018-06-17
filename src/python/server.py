@@ -48,7 +48,8 @@ class SnippetModel(
         ApiModelMixin,
 ):
     id = db.Column(db.Integer, primary_key=True)
-    shared = db.Column(db.Boolean)
+    shared = db.Column(db.Boolean, default=True)
+    text = db.Column(db.String)
 
 
 class ActionModel(
@@ -80,7 +81,26 @@ class ResourceSnippets(Resource):
                 return [], 404
         except BaseException as e:
             errorLog(e)
-            return '', 500
+            return 'server error', 500
+
+    def post(self):
+        try:
+            data = request.get_json()
+
+            if not data:
+                errorLog(data)
+                return 'POST data required', 400
+            elif not data.get('text'):
+                errorLog(data)
+                return 'POST data.text required', 400
+
+            snippet = SnippetModel(**data)
+            db.session.add(snippet)
+            db.session.commit()
+            return snippet.as_dict, 201
+        except BaseException as e:
+            errorLog(e)
+            return 'server error', 500
 
 
 @app.route('/')
