@@ -56,8 +56,7 @@ def test_post_returns_snippet(app, session):
     # function under test
     response = app.post(
         '/snippets',
-        data=json.dumps({'text': 'rawr'}),
-        content_type='application/json',
+        json={'text': 'rawr'},
     )
     # assertion
     assert json_body(response)['object'] == 'Snippet'
@@ -68,8 +67,7 @@ def test_post_respects_text_input(app, session):
     # function under test
     response = app.post(
         '/snippets',
-        data=json.dumps({'text': 'rawr'}),
-        content_type='application/json',
+        json={'text': 'rawr'},
     )
     # assertion
     assert json_body(response)['text'] == 'rawr'
@@ -81,8 +79,7 @@ def test_post_requires_text_input(app, session):
     # function under test
     response = app.post(
         '/snippets',
-        data=json.dumps({'text': ''}),
-        content_type='application/json',
+        json={'text': ''},
     )
     # assertion
     assert response.status_code == 400
@@ -92,8 +89,7 @@ def test_post_respects_share_input_false(app, session):
     # function under test
     response = app.post(
         '/snippets',
-        data=json.dumps({'text': 'rawr', 'shared': False}),
-        content_type='application/json',
+        json={'text': 'rawr', 'shared': False},
     )
     # assertion
     assert json_body(response)['shared'] == False
@@ -104,8 +100,7 @@ def test_post_respects_share_input_true(app, session):
     # function under test
     response = app.post(
         '/snippets',
-        data=json.dumps({'text': 'rawr', 'shared': True}),
-        content_type='application/json',
+        json={'text': 'rawr', 'shared': True},
     )
     # assertion
     assert json_body(response)['shared'] == True
