@@ -4,7 +4,7 @@ flask server, and optional helper code
 
 import os
 import sys
-import collections
+import traceback
 
 from flask import Flask, jsonify, request
 from dotenv import load_dotenv, find_dotenv
@@ -80,6 +80,7 @@ class ResourceSnippets(Resource):
             else:
                 return [], 404
         except BaseException as e:
+            traceback.print_exc()
             errorLog(e)
             return 'server error', 500
 
@@ -99,6 +100,7 @@ class ResourceSnippets(Resource):
             db.session.commit()
             return snippet.as_dict, 201
         except BaseException as e:
+            traceback.print_exc()
             errorLog(e)
             return 'server error', 500
 
