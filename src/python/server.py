@@ -74,7 +74,10 @@ class ResourceSnippets(Resource):
                 snippet.as_dict
                 for snippet in SnippetModel.query.all()
             ]
-            return snippets, 200
+            if snippets:
+                return snippets, 200
+            else:
+                return [], 404
         except BaseException as e:
             errorLog(e)
             return '', 500
