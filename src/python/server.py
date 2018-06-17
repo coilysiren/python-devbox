@@ -5,6 +5,7 @@ flask server, and optional helper code
 import os
 import sys
 import traceback
+from functools import wraps
 
 from flask import Flask, jsonify, request
 from dotenv import load_dotenv, find_dotenv
@@ -24,6 +25,37 @@ def errorLog(log):
     print(f'[LOG] {log}', file=sys.stderr)
 
 
+def unauthorized_response():
+    errorLog(f'request headers: {request.headers}')
+    return 'missing authorization header', 401
+
+
+def with_authorization(optional=False):
+    def decorator(request_function):
+        @wraps(request_function)
+        def decorated_function(*args, **kwargs):
+
+            email_address = request.headers.get('Authorization')
+            # invalid authorization case
+            if not email_address and not optional:
+                unauthorized_response()
+            # valid authorization case
+            else:
+                # get or create user
+                user = UserModel.query.filter_by(
+                    email_address=email_address).first()
+                if not user:
+                    user = UserModel(email_address=email_address)
+                    db.session.add(user)
+                    db.session.commit()
+                # continue executing reponse with user set on the request
+                request.user = user
+                request_function(*args, **kwargs)
+
+        return decorated_function
+    return decorator
+
+
 class ApiModelMixin(object):
 
     @property
@@ -40,22 +72,32 @@ class UserModel(
         db.Model,
         ApiModelMixin,
 ):
+    # universal attrs
     id = db.Column(db.Integer, primary_key=True)
+    # local attrs
+    email_address = db.Column(db.Boolean, default=True)
+    # relationships
+    snippets = db.relationship('SnippetModel', backref='user', lazy=True)
 
 
 class SnippetModel(
         db.Model,
         ApiModelMixin,
 ):
+    # universal attrs
     id = db.Column(db.Integer, primary_key=True)
+    # local attrs
     shared = db.Column(db.Boolean, default=True)
     text = db.Column(db.String)
+    # relationships
+    user_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
 
 
 class ActionModel(
         db.Model,
         ApiModelMixin,
 ):
+    # universal attrs
     id = db.Column(db.Integer, primary_key=True)
 
 
@@ -63,12 +105,14 @@ class AcheievementModel(
         db.Model,
         ApiModelMixin,
 ):
+    # universal attrs
     id = db.Column(db.Integer, primary_key=True)
 
 
 @api.resource('/snippets')
 class ResourceSnippets(Resource):
 
+    @with_authorization(optional=True)
     def get(self):
         try:
             snippets = [
@@ -84,6 +128,7 @@ class ResourceSnippets(Resource):
             errorLog(e)
             return 'server error', 500
 
+    @with_authorization
     def post(self):
         try:
             data = request.get_json()
