@@ -56,7 +56,6 @@ def test_post_returns_snippet(app, session):
         content_type='application/json',
     )
     # assertion
-    assert len(json_body(response)) == 1
     assert json_body(response)['object'] == 'Snippet'
     assert response.status_code == 201
 
