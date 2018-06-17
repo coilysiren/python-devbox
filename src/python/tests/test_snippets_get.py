@@ -1,7 +1,7 @@
 import json
 import sys
 
-from .server import SnippetModel
+from ..server import SnippetModel
 from .test_helper import json_body
 from .test_fixtures import app, db, session
 

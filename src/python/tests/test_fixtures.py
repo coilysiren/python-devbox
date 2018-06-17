@@ -1,7 +1,7 @@
 import pytest
 
-from .server import app as _app
-from .server import db as _db
+from ..server import app as _app
+from ..server import db as _db
 
 
 # ref: http://alexmic.net/flask-sqlalchemy-pytest/
