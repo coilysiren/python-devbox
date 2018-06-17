@@ -28,10 +28,12 @@ class ApiModelMixin(object):
 
     @property
     def as_dict(self):
-        return {
+        attrs = {
             column.name: getattr(self, column.name)
             for column in self.__table__.columns
         }
+        attrs['model'] = self.__class__.__name__
+        return attrs
 
 
 class UserModel(
