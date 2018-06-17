@@ -2,7 +2,8 @@ import json
 import sys
 
 from .server import SnippetModel
-from .test_helper import json_body, app, db, session
+from .test_helper import json_body
+from .test_fixtures import app, db, session
 
 
 def test_get_snippets_requires_snippets(app, session):

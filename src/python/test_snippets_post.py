@@ -1,7 +1,16 @@
 import json
 
-from .server import SnippetModel
-from .test_helper import json_body, app, db, session
+from .test_helper import json_body
+from .test_fixtures import app, db, session
+
+
+def test_post_snipped_requires_authorization(app, session):
+    # function under test
+    response = app.post(
+        '/snippets',
+    )
+    # assertion
+    assert response.status_code == 401
 
 
 def test_post_snipped_requires_data(app, session):
