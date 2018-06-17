@@ -245,3 +245,4 @@ For your work on this project and in the group session we’ll be looking at:
 - [ ] take some inspiration from twitters api docs
 - [ ] authorization parsing should be a decorator with default `optional=False`
 - [ ] prep a postman (or similar) demo
+- [ ] run through a REST api best practices doc
