@@ -1,6 +1,13 @@
 import pytest
+import sys
+import json
+
 from .server import app as _app
 from .server import db as _db
+
+
+def json_body(response):
+    return json.loads(response.get_data().decode(sys.getdefaultencoding()))
 
 
 # ref: http://alexmic.net/flask-sqlalchemy-pytest/
