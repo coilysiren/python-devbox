@@ -62,3 +62,8 @@ def test_get_snippets_shows_proper_count_when_mixed_types(app, session):
     # assertion
     assert len(json_body(response)) == 2
     assert response.status_code == 200
+
+
+def test_get_snippets_also_shows_current_users_unshared_snippets(app, session):
+    # TODO, need authorization pattern first
+    pass
