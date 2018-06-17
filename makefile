@@ -1,4 +1,7 @@
 dev:
+	pytest-watch
+
+__dev-old:
 	npx concurrently \
 		-k -n angular,flask \
 		-c red,green \

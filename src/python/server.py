@@ -66,8 +66,8 @@ class AcheievementModel(
 class TodoResource(Resource):
 
     def delete(self, todo_id):
-        TodoModel.query.filter_by(id=todo_id).delete()
-        db.session.commit()
+        # TodoModel.query.filter_by(id=todo_id).delete()
+        # db.session.commit()
         return '', 204
 
 
@@ -76,27 +76,28 @@ class TodoListResource(Resource):
 
     def get(self):
         try:
-            results = [
-                todo.as_dict
-                for todo in TodoModel.query.all()
-            ]
-            priorities = [
-                result['priority']
-                for result in results
-            ]
-            repeats = [item for item, count in collections.Counter(
-                priorities).items() if count > 1]
-            return [results, repeats]
+            # results = [
+            #     todo.as_dict
+            #     for todo in TodoModel.query.all()
+            # ]
+            # priorities = [
+            #     result['priority']
+            #     for result in results
+            # ]
+            # repeats = [item for item, count in collections.Counter(
+            #     priorities).items() if count > 1]
+            return '', 201
+            # return [results, repeats]
         except BaseException as e:
             errorLog(e)
             return '', 500
 
     def post(self):
         try:
-            data = request.get_json()
-            todo = TodoModel(**data)
-            db.session.add(todo)
-            db.session.commit()
+            # data = request.get_json()
+            # todo = TodoModel(**data)
+            # db.session.add(todo)
+            # db.session.commit()
             return '', 201
         except BaseException as e:
             errorLog(e)
