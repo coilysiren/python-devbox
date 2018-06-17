@@ -53,3 +53,9 @@ def test_get_snippets_shows_proper_count_when_mixed_types(app, session):
 def test_get_snippets_also_shows_current_users_unshared_snippets(app, session):
     # TODO, need authorization pattern first
     pass
+
+
+def test_get_snippets_default_to_TODO(app, session):
+    # TODO, determine default for share status
+    # TODO, sync with product manager
+    pass
