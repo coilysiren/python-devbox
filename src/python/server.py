@@ -24,26 +24,41 @@ def errorLog(log):
     print(f'[LOG] {log}', file=sys.stderr)
 
 
-class ApiModel(db.Model):
+class ApiModelMixin(object):
 
     @property
     def as_dict(self):
-        return {column.name: getattr(self, column.name) for column in self.__table__.columns}
+        return {
+            column.name: getattr(self, column.name)
+            for column in self.__table__.columns
+        }
 
 
-class UserModel(ApiModel):
+class UserModel(
+        db.Model,
+        ApiModelMixin,
+):
     id = db.Column(db.Integer, primary_key=True)
 
 
-class SnippetModel(ApiModel):
+class SnippetModel(
+        db.Model,
+        ApiModelMixin,
+):
     id = db.Column(db.Integer, primary_key=True)
 
 
-class ActionModel(ApiModel):
+class ActionModel(
+        db.Model,
+        ApiModelMixin,
+):
     id = db.Column(db.Integer, primary_key=True)
 
 
-class AcheievementModel(ApiModel):
+class AcheievementModel(
+        db.Model,
+        ApiModelMixin,
+):
     id = db.Column(db.Integer, primary_key=True)
 
 
