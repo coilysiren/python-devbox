@@ -46,6 +46,7 @@ class SnippetModel(
         ApiModelMixin,
 ):
     id = db.Column(db.Integer, primary_key=True)
+    shared = db.Column(db.Boolean)
 
 
 class ActionModel(
@@ -62,21 +63,16 @@ class AcheievementModel(
     id = db.Column(db.Integer, primary_key=True)
 
 
-@api.resource('/snippets/')
+@api.resource('/snippets')
 class ResourceSnippets(Resource):
-
-    def delete(self, todo_id):
-        # TodoModel.query.filter_by(id=todo_id).delete()
-        # db.session.commit()
-        return '', 204
-
-
-@api.resource('/api/todos')
-class TodoListResource(Resource):
 
     def get(self):
         try:
-            return '', 200
+            snippets = [
+                snippet.as_dict
+                for snippet in SnippetModel.query.all()
+            ]
+            return snippets, 200
         except BaseException as e:
             errorLog(e)
             return '', 500

@@ -3,6 +3,9 @@ from .server import app as _app
 from .server import db as _db
 
 
+# ref: http://alexmic.net/flask-sqlalchemy-pytest/
+
+
 @pytest.fixture(scope='session')
 def app(request):
     """Session-wide test `Flask` application."""
