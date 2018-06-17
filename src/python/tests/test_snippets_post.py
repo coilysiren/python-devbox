@@ -52,6 +52,18 @@ def test_post_snipped_requires_content_type(app, session):
     assert response.status_code == 400
 
 
+def test_post_control_example_returns_snippet(app, session):
+    # function under test
+    response = app.post(
+        '/snippets',
+        data=json.dumps({'text': 'rawr'}),
+        content_type='application/json',
+    )
+    # assertion
+    assert json_body(response)['object'] == 'Snippet'
+    assert response.status_code == 201
+
+
 def test_post_returns_snippet(app, session):
     # function under test
     response = app.post(
