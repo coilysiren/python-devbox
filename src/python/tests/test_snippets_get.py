@@ -57,7 +57,6 @@ def test_get_snippets_also_shows_current_users_unshared_snippets(app, session):
 
 
 def test_get_snippets_default_to_TODO(app, session):
-    # TODO, sync with product manager RE default share state
     # setup
     session.add(SnippetModel())
     session.commit()

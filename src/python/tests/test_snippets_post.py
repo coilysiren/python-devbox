@@ -87,7 +87,6 @@ def test_post_respects_text_input(app, session):
 
 
 def test_post_requires_text_input(app, session):
-    # TODO, sync with product manager RE empty snippets
     # function under test
     response = app.post(
         '/snippets',
