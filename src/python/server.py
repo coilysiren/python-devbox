@@ -25,6 +25,10 @@ def errorLog(log):
     print(f'[LOG] {log}', file=sys.stderr)
 
 
+class ApiUnauthorizedException(BaseException):
+    pass
+
+
 def unauthorized_response():
     errorLog(f'request headers: {request.headers}')
     return 'missing authorization header', 401
@@ -36,9 +40,11 @@ def with_authorization(optional=False):
         def decorated_function(*args, **kwargs):
 
             email_address = request.headers.get('Authorization')
+
             # invalid authorization case
             if not email_address and not optional:
-                unauthorized_response()
+                raise ApiUnauthorizedException
+
             # valid authorization case
             else:
                 # get or create user
@@ -50,7 +56,7 @@ def with_authorization(optional=False):
                     db.session.commit()
                 # continue executing reponse with user set on the request
                 request.user = user
-                request_function(*args, **kwargs)
+                return request_function(*args, **kwargs)
 
         return decorated_function
     return decorator
@@ -128,7 +134,7 @@ class ResourceSnippets(Resource):
             errorLog(e)
             return 'server error', 500
 
-    @with_authorization
+    @with_authorization()
     def post(self):
         try:
             data = request.get_json()
