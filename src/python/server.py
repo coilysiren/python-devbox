@@ -32,7 +32,7 @@ class ApiModelMixin(object):
             column.name: getattr(self, column.name)
             for column in self.__table__.columns
         }
-        attrs['model'] = self.__class__.__name__
+        attrs['object'] = self.__class__.__name__.strip('Model')
         return attrs
 
 
