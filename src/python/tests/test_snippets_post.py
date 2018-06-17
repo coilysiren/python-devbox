@@ -60,8 +60,8 @@ def test_post_control_example_returns_snippet(test_app, session):
         content_type='application/json',
     )
     # assertion
-    assert json_body(response)['object'] == 'Snippet'
     assert response.status_code == 201
+    assert json_body(response)['object'] == 'Snippet'
 
 
 def test_post_returns_snippet(test_app, session):
@@ -71,8 +71,8 @@ def test_post_returns_snippet(test_app, session):
         json={'text': 'rawr'},
     )
     # assertion
-    assert json_body(response)['object'] == 'Snippet'
     assert response.status_code == 201
+    assert json_body(response)['object'] == 'Snippet'
 
 
 def test_post_respects_text_input(test_app, session):
@@ -82,8 +82,8 @@ def test_post_respects_text_input(test_app, session):
         json={'text': 'rawr'},
     )
     # assertion
-    assert json_body(response)['text'] == 'rawr'
     assert response.status_code == 201
+    assert json_body(response)['text'] == 'rawr'
 
 
 def test_post_requires_text_input(test_app, session):
@@ -103,8 +103,8 @@ def test_post_respects_share_input_false(test_app, session):
         json={'text': 'rawr', 'shared': False},
     )
     # assertion
-    assert json_body(response)['shared'] == False
     assert response.status_code == 201
+    assert json_body(response)['shared'] == False
 
 
 def test_post_respects_share_input_true(test_app, session):
@@ -114,5 +114,5 @@ def test_post_respects_share_input_true(test_app, session):
         json={'text': 'rawr', 'shared': True},
     )
     # assertion
-    assert json_body(response)['shared'] == True
     assert response.status_code == 201
+    assert json_body(response)['shared'] == True
