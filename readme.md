@@ -230,3 +230,18 @@ For your work on this project and in the group session we’ll be looking at:
 - Software and database design – your approach to organizing code and data modeling to build the services
 - Code quality and craft - we love code that is readable, testable, and maintainable
 - Your skill at communicating the above to technical teams
+
+## Notes
+
+- this is a REST api server project, no frontend needed
+- dont leave tech debt in, do keep the linter running
+
+# TODO
+
+- [ ] can TDD the endpoints and error cases (TDD works well in this case!)
+- [ ] the spec defines "least effort" versions of the endpoints, do feel free to add more data to them
+- [ ] include examples of how the endpoints would be used
+- [ ] look for some programmatic documentation generation
+- [ ] take some inspiration from twitters api docs
+- [ ] authorization parsing should be a decorator with default `optional=False`
+- [ ] prep a postman (or similar) demo
