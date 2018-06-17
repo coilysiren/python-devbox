@@ -72,7 +72,7 @@ class ResourceSnippets(Resource):
         try:
             snippets = [
                 snippet.as_dict
-                for snippet in SnippetModel.query.all()
+                for snippet in SnippetModel.query.filter_by(shared=True)
             ]
             if snippets:
                 return snippets, 200
