@@ -251,6 +251,6 @@ For your work on this project and in the group session we’ll be looking at:
 
 ## Questions / Clarifications / Decisions
 
-- there's no explicit users endpoint, so the application auto-creates users from the a unique email address is present in the Authorization header. _@ProductManger_: should there instead be an explicit users endpoint?
-- the api blocks the creation of snippets with empty text. _@ProductManger_: should users be allowed to create empty snippets?
-- the api defaults snippets to being shared (eg `shared=True`). _@ProductManger_: should there be a default share state, and if so should it be true or false?
+- there's no explicit users endpoint, so the application auto-creates users from the a unique email address is present in the Authorization header. **@ProductManager**: should there instead be an explicit users endpoint?
+- the api blocks the creation of snippets with empty text. **@ProductManager**: should users be allowed to create empty snippets?
+- the api defaults snippets to being shared (eg `shared=True`). **@ProductManager**: should there be a default share state, and if so should it be true or false?
