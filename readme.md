@@ -1,5 +1,7 @@
 # Textio Take-home problem 2
 
+_note: the beginning of this document is a copy paste, my notes follow at the end_
+
 ## Overview
 
 Termfront is building ground breaking experiences to encourage people to write and share small snippets of text. To encourage users to write more, Termfront will grant a small set of achievements based on user behavior. However, Termfront has found users are more motivated when the behavior of other users affects the achievements they earn.
@@ -236,7 +238,7 @@ For your work on this project and in the group session we’ll be looking at:
 - this is a REST api server project, no frontend needed
 - dont leave tech debt in, do keep the linter running
 
-# TODO
+## TODO
 
 - [ ] can TDD the endpoints and error cases (TDD works well in this case!)
 - [ ] the spec defines "least effort" versions of the endpoints, do feel free to add more data to them
@@ -247,7 +249,7 @@ For your work on this project and in the group session we’ll be looking at:
 - [ ] prep a postman (or similar) demo
 - [ ] run through a REST api best practices doc
 
-# Questions / Clarifications / Decisions
+## Questions / Clarifications / Decisions
 
 - there's no explicit users endpoint, so the application auto-creates users from the a unique email address is present in the Authorization header. @ Product manger: should there instead be an explicit users endpoint?
 - the api blocks the creation of snippets with empty text. @ Product manger: should users be allowed to create empty snippets?
