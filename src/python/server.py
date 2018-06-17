@@ -15,7 +15,7 @@ from flask_restful import Resource, Api
 load_dotenv(find_dotenv())
 app = Flask(__name__)
 app.secret_key = os.environ['SECRET_KEY']
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/pythondevbox_v3.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/pythondevbox_v4.db'
 db = SQLAlchemy(app)
 api = Api(app)
 
@@ -24,14 +24,27 @@ def errorLog(log):
     print(f'[LOG] {log}', file=sys.stderr)
 
 
-class TodoModel(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    priority = db.Column(db.String)
-    content = db.Column(db.String)
+class ApiModel(db.Model):
 
     @property
     def as_dict(self):
         return {column.name: getattr(self, column.name) for column in self.__table__.columns}
+
+
+class UserModel(ApiModel):
+    id = db.Column(db.Integer, primary_key=True)
+
+
+class SnippetModel(ApiModel):
+    id = db.Column(db.Integer, primary_key=True)
+
+
+class ActionModel(ApiModel):
+    id = db.Column(db.Integer, primary_key=True)
+
+
+class AcheievementModel(ApiModel):
+    id = db.Column(db.Integer, primary_key=True)
 
 
 @api.resource('/api/todos/<todo_id>')
