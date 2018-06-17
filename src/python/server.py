@@ -34,6 +34,7 @@ class TodoModel(db.Model):
         return {column.name: getattr(self, column.name) for column in self.__table__.columns}
 
 
+@api.resource('/api/todos/<todo_id>')
 class TodoResource(Resource):
 
     def delete(self, todo_id):
@@ -42,6 +43,7 @@ class TodoResource(Resource):
         return '', 204
 
 
+@api.resource('/api/todos')
 class TodoListResource(Resource):
 
     def get(self):
@@ -84,5 +86,3 @@ def ping():
 
 
 db.create_all()
-api.add_resource(TodoListResource,  '/api/todos')
-api.add_resource(TodoResource,      '/api/todos/<todo_id>')
