@@ -259,6 +259,7 @@ For your work on this project and in the group session we’ll be looking at:
 - [ ] add a user endpoint
 - [ ] add more foreign keys to enable better data analysis / front-end data display
 - [ ] make code agnostic to action type, so more actions can be added
+- [ ] type casting where needed (particularly on the booleans)
 
 ## Questions / Clarifications / Decisions
 
