@@ -240,18 +240,25 @@ For your work on this project and in the group session we’ll be looking at:
 
 ## TODO
 
-- [ ] can TDD the endpoints and error cases (TDD works well in this case!)
-- [ ] the spec defines "least effort" versions of the endpoints, do feel free to add more data to them
-- [ ] include examples of how the endpoints would be used
-- [ ] look for some programmatic documentation generation
-- [ ] take some inspiration from twitters api docs
-- [ ] authorization parsing should be a decorator with default `optional=False`
-- [ ] prep a postman (or similar) demo
-- [ ] run through a REST api best practices doc
+- [ ] can TDD the endpoints and error cases
+- [ ] define "least effort" versions of each endpoint
+- [x] authorization parsing should be a decorator with default `optional=False`
+- [ ] prep a postman demo
 - [ ] `db.create_all()` call
+
+## TODO ( if I had +8 more hours )
+
 - [ ] give application a once over based on rest api best practices
 - [ ] `created` and `updated` fields on everything
 - [ ] a `Read` action type
+- [ ] remove like + share code duplication (there's _a lot_ of it)
+- [ ] CI + codeclimate
+- [ ] some programmatic documentation generation (particularly good for apis)
+- [ ] include examples of how the endpoints would be used (in the above documentation)
+- [ ] define an error code pattern (ex: `ERROR_CANNOT_PERFORM_ON_OWN`) so a frontend client could consume errors that the enable giving verbose feedback
+- [ ] add a user endpoint
+- [ ] add more foreign keys to enable better data analysis / front-end data display
+- [ ] make code agnostic to action type, so more actions can be added
 
 ## Questions / Clarifications / Decisions
 
