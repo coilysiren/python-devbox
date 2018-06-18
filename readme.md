@@ -34,3 +34,23 @@ Write a REST-ful HTTP web-application server that has the following endpoints:
 - What datastore would you use in production? Why?
 - What would be the next set of features you would consider to build?
 - Why did you choose the language / framework that you did? Did you consider any others?
+
+## Plan
+
+- restart infra
+- pre-populate jobs
+- spec get available jobs
+- spec get unavailable jobs not shown
+- spec post answer job
+- spec post answer twice returns duplicate status
+- spec post cannot answer others job
+- spec get job details
+- frontend???
+
+## Data
+
+Jobs model
+
+- question text
+- response text
+- status text (could be an int, but text will allow faster iteration)
