@@ -162,6 +162,14 @@ class ResourceSnippet(ResourceWithErrorHandling):
         return request.snippet.as_dict, 200
 
 
+@api.resource('/achievements')
+class ResourceAchievements(ResourceWithErrorHandling):
+
+    @with_authorization()
+    def get(self):
+        return request.user.achievements, 200
+
+
 @app.route('/')
 def index():
     return 'hello world!!'

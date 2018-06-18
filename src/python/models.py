@@ -35,8 +35,25 @@ class UserModel(
     id = db.Column(db.Integer, primary_key=True)
     # local attrs
     email_address = db.Column(db.String, default=True)
+    snippets_created_count = db.Column(db.Integer, default=True)
+    likes_recieved_count = db.Column(db.Integer, default=True)
+    snippets_shared_count = db.Column(db.Integer, default=True)
     # relationships
     snippets = db.relationship('SnippetModel', backref='user')
+
+    @property
+    def achievements(self):
+        return {
+            'created': self.snippets_created_count / 10,
+            'liked': self.likes_recieved_count / 10,
+            'shared': self.snippets_shared_count / 10,
+        }
+
+    @property
+    def as_dict(self):
+        attrs = super().as_dict
+        attrs['achievements'] = self.achievements
+        return attrs
 
 
 class SnippetModel(
@@ -109,12 +126,3 @@ class ShareModel(
     snippet = db.relationship("SnippetModel", back_populates="shares")
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship("UserModel")
-
-
-class AcheievementModel(
-        ApiModelMixin,
-        db.Model,
-):
-    # universal attrs
-    __tablename__ = 'achievement'
-    id = db.Column(db.Integer, primary_key=True)
