@@ -12,6 +12,7 @@ def app(request):
     """Session-wide test `Flask` application."""
 
     # Establish an application context before running the tests.
+    _app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/textiocodetest_testingdb.db'
     ctx = _app.app_context()
     ctx.push()
 
@@ -36,6 +37,7 @@ def db(app, request):
     def teardown():
         _db.drop_all(app=app)
 
+    _db.drop_all(app=app)
     _db.create_all(app=app)
 
     request.addfinalizer(teardown)

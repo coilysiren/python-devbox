@@ -1,11 +1,19 @@
 import sys
 import traceback
+import distutils.util
 from functools import wraps
 
 from flask import request
 from flask_restful import Resource
 
 from .models import db, UserModel
+
+
+def boolean_parser(boolean):
+    if isinstance(boolean, bool):
+        return boolean
+    if isinstance(boolean, str):
+        return distutils.util.strtobool(boolean)
 
 
 def error_log(log):
@@ -73,6 +81,14 @@ class UnauthorizedCannotPerformOnOwnException(UnauthorizedException):
 
 
 class BadRequestException(BaseException):
+    pass
+
+
+class BadRequestNoDataException(BadRequestException):
+    pass
+
+
+class BadRequestMissingAttributeException(BadRequestException):
     pass
 
 

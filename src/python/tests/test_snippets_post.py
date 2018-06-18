@@ -36,7 +36,7 @@ def test_post_snipped_requires_data_text(test_app, session):
     assert response.status_code == 400
 
 
-def test_post_snipped_requires_json(test_app, session):
+def test_post_snipped_does_not_require_json(test_app, session):
     # function under test
     response = test_app.post(
         '/snippets',
@@ -44,7 +44,7 @@ def test_post_snipped_requires_json(test_app, session):
         headers={'Authorization': 'lynncyrin@gmail.com'}
     )
     # assertion
-    assert response.status_code == 400
+    assert response.status_code == 201
 
 
 def test_post_snipped_requires_content_type(test_app, session):

@@ -79,6 +79,8 @@ class SnippetModel(
         attrs['user'] = self.user.as_dict if self.user else {}
         attrs['shares'] = len(self.shares)
         attrs['likes'] = len(self.likes)
+        attrs['shares_count'] = len(self.shares)
+        attrs['likes_count'] = len(self.likes)
         attrs['shares_data'] = [share.as_dict for share in self.shares]
         attrs['likes_data'] = [like.as_dict for like in self.likes]
         # alias attributes

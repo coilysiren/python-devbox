@@ -11,7 +11,8 @@ from flask_restful import Api
 from .view_helpers import (
     ResourceWithErrorHandling, with_authorization, UnauthorizedNotShareableException,
     UnauthorizedCannotPerformOnOwnException, NotFoundException, BadRequestException,
-    BadRequestNoActionFoundException
+    BadRequestNoActionFoundException, BadRequestNoDataException,
+    BadRequestMissingAttributeException, boolean_parser
 )
 from .models import db, SnippetModel, LikeModel, ShareModel
 
@@ -51,14 +52,17 @@ class ResourceSnippets(ResourceWithErrorHandling):
     @with_authorization()
     def post(self):
         ### request data parsing step ###
-        data = request.get_json()
+        data = request.form or request.get_json()
         if not data:
-            raise BadRequestException
+            raise BadRequestNoDataException
         elif not data.get('text'):
-            raise BadRequestException
-        data['user'] = request.user
+            raise BadRequestMissingAttributeException
 
-        snippet = SnippetModel(**data)
+        snippet = SnippetModel(
+            user=request.user,
+            shared=True if data.get('shared') else False,
+            text=data.get('text'),
+        )
         snippet.user.snippets_created_count += 1
         db.session.add(snippet)
         db.session.commit()
@@ -101,11 +105,11 @@ class ResourceSnippet(ResourceWithErrorHandling):
         self._process_snippet_request(snippet_id)
 
         ### request data parsing step ###
-        data = request.get_json()
+        data = request.form or request.get_json()
         if not data:
-            raise BadRequestException
+            raise BadRequestNoDataException
         elif not any([
-            data.get(action) in [True, False]
+            boolean_parser(data.get(action)) in [True, False]
             for action in [
                 'allow_sharing',
                 'liked',
