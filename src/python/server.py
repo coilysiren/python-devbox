@@ -57,6 +57,20 @@ class ResourceSnippets(ResourceWithErrorHandling):
         return snippet.as_dict, 201
 
 
+@api.resource('/snippets/<snippet_id>')
+class ResourceSnippet(ResourceWithErrorHandling):
+
+    @with_authorization(optional=True)
+    def get(self, snippet_id):
+        snippet = SnippetModel.query.filter_by(id=snippet_id).first()
+        return snippet.as_dict, 200
+
+    @with_authorization()
+    def put(self, snippet_id):
+        snippet = SnippetModel.query.filter_by(id=snippet_id).first()
+        return snippet.as_dict, 200
+
+
 @app.route('/')
 def index():
     return 'hello world!!'

@@ -256,3 +256,4 @@ For your work on this project and in the group session we’ll be looking at:
 - the api blocks the creation of snippets with empty text. **@ProductManager**: should users be allowed to create empty snippets?
 - the api defaults snippets to being shared (eg `shared=True`). **@ProductManager**: should there be a default share state, and if so should it be true or false?
 - the get endpoint returns unshared snippets for the currently authorized user. the idea here is that your "home timeline" isn't just "all shared posts" but instead "all posts you can see". "all posts you can see" means "shared posts" and also "unshared posts that you own". **@ProductManager**: this should be accounted for on the front-end, likely via graying out the unshared snippets
+- unshared snippets return "404 not found" rather than "401 unauthorized" with accessed by a user that doesn't own them. this is a fairly standard pattern, but should still be flagged.
