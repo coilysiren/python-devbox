@@ -115,9 +115,12 @@ class ResourceSnippet(ResourceWithErrorHandling):
             return f'PUT requires one of {ACTIONS}', 400
 
         ### update actions step ###
-        # note! these are purposefully not elifs
         if data.get('allow_sharing'):
             request.snippet.shared = data.get('allow_sharing')
+
+        if (data.get('shared') or data.get('liked')) and not request.snippet.shared:
+            return 'Cannot like or share unshared snippet', 401
+
         if data.get('liked'):
             like = LikeModel(
                 snippet_id=request.snippet.id,
@@ -130,6 +133,7 @@ class ResourceSnippet(ResourceWithErrorHandling):
                 user_id=request.user.id,
             )
             db.session.add(share)
+
         db.session.commit()
 
         return response

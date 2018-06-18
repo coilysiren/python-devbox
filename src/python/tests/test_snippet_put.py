@@ -63,6 +63,7 @@ def test_put_snippet_updates_shares(test_app, session):
         headers={'Authorization': 'lynncyrin@gmail.com'}
     )
     # assertion
+    assert response.status_code == 200
     assert SnippetModel.query.filter_by(
         id=snippet_id).first().as_dict['shares'] == 1
 
@@ -84,8 +85,8 @@ def test_put_snippet_can_only_update_share_status_on_own_snippet(test_app, sessi
         headers={'Authorization': 'totallynotlynncyrin@gmail.com'}
     )
     # assertion
-    assert SnippetModel.query.filter_by(id=snippet_id).first().shared == False
     assert response.status_code == 404
+    assert SnippetModel.query.filter_by(id=snippet_id).first().shared == False
 
 
 def test_put_snippet_cannot_share_unshareable_snippet(test_app, session):
@@ -106,7 +107,7 @@ def test_put_snippet_cannot_share_unshareable_snippet(test_app, session):
         headers={'Authorization': 'lynncyrin@gmail.com'}
     )
     # assertion
-    assert response.status_code == 404
+    assert response.status_code == 401
     assert SnippetModel.query.filter_by(
         id=snippet_id).first().as_dict['shares'] == 0
 
