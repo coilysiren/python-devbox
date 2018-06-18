@@ -14,7 +14,10 @@ def test_put_snippet_requires_data(test_app, session):
     )
     snippet_id = json_body(response)['id']
     # function under test
-    response = test_app.put(f'/snippets/{snippet_id}')
+    response = test_app.put(
+        f'/snippets/{snippet_id}',
+        headers={'Authorization': 'lynncyrin@gmail.com'}
+    )
     # assertion
     assert response.status_code == 400
 
