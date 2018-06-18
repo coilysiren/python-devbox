@@ -109,7 +109,7 @@ class ResourceSnippet(ResourceWithErrorHandling):
         if not data:
             return 'PUT data required', 400
         elif not any([
-            data.get(action)
+            data.get(action) in [True, False]
             for action in ACTIONS
         ]):
             return f'PUT requires one of {ACTIONS}', 400
@@ -118,22 +118,48 @@ class ResourceSnippet(ResourceWithErrorHandling):
         if data.get('allow_sharing'):
             request.snippet.shared = data.get('allow_sharing')
 
-        if data.get('shared') or data.get('liked'):
+        if data.get('shared') in [True, False] or data.get('liked') in [True, False]:
             if not request.snippet.shared:
                 return 'Cannot like or share unshared snippet', 401
             if request.snippet.user.id == request.user.id:
                 return 'Cannot like or share your own snippet', 401
 
         if data.get('liked') == True:
-            db.session.add(LikeModel(
+            like = LikeModel.query.filter_by(
                 snippet_id=request.snippet.id,
                 user_id=request.user.id,
-            ))
+            ).first()
+            if not like:
+                db.session.add(LikeModel(
+                    snippet_id=request.snippet.id,
+                    user_id=request.user.id,
+                ))
+        elif data.get('liked') == False:
+            LikeModel.query.filter_by(
+                snippet_id=request.snippet.id,
+                user_id=request.user.id,
+            ).delete()
+
+        from .view_helpers import error_log
+
+        error_log(f'data {data}')
+
         if data.get('shared') == True:
-            db.session.add(ShareModel(
+            share = ShareModel.query.filter_by(
                 snippet_id=request.snippet.id,
                 user_id=request.user.id,
-            ))
+            ).first()
+            if not share:
+                db.session.add(ShareModel(
+                    snippet_id=request.snippet.id,
+                    user_id=request.user.id,
+                ))
+        elif data.get('shared') == False:
+            error_log('deleting a ShareModel')
+            ShareModel.query.filter_by(
+                snippet_id=request.snippet.id,
+                user_id=request.user.id,
+            ).delete()
 
         db.session.commit()
         db.session.refresh(request.snippet)
