@@ -69,14 +69,11 @@ class SnippetModel(
     @property
     def as_dict(self):
         '''
-        add 'owner' alias to snippet json
+        add alias attributes to snippet json
         '''
         attrs = super().as_dict
-        try:
-            attrs['owner'] = self.user.email_address
-        # ignore errors when there's no owner
-        except AttributeError:
-            pass
+        attrs['snippetId'] = self.id
+        attrs['owner'] = attrs.get('user', {}).get('email_address')
         return attrs
 
 
