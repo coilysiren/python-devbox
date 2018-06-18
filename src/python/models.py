@@ -15,8 +15,6 @@ class ApiModelMixin(object):
     def as_dict(self):
         '''
         turns the current model into a dictionary, so we can turn it into a json response
-
-        recurses down foreign keyed models so they're all turned into dicts too
         '''
         attrs = {
             column.name: getattr(self, column.name)
