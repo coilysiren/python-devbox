@@ -66,6 +66,19 @@ class SnippetModel(
     # relationships
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    @property
+    def as_dict(self):
+        '''
+        add 'owner' alias to snippet json
+        '''
+        attrs = super().as_dict
+        try:
+            attrs['owner'] = self.user.email_address
+        # ignore errors when there's no owner
+        except AttributeError:
+            pass
+        return attrs
+
 
 class ActionModel(
         db.Model,
