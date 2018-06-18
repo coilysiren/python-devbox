@@ -6,7 +6,6 @@ import os
 
 from flask import Flask, jsonify, request
 from dotenv import load_dotenv, find_dotenv
-from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 
 from .view_helpers import (
