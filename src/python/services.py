@@ -68,4 +68,15 @@ class ResourceWithErrorHandling(Resource):
 
 
 class JobsService(object):
-    pass
+
+    @classmethod
+    def get_all_jobs(cls, request):
+        return '', 200
+
+    @classmethod
+    def post_job_answer(cls, request, job_id):
+        return '', 200
+
+    @classmethod
+    def get_job_info(cls, request, job_id):
+        return '', 200

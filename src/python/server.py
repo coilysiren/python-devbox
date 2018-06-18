@@ -26,21 +26,21 @@ TOTAL_SEED_JOBS = 20
 class JobsResource(Resource):
 
     def get(self):
-        return '', 200
+        return JobsService.get_all_jobs(request)
 
 
 @api.resource('/jobs/<job_id>/answer')
 class JobAnswerResouce(Resource):
 
     def post(self, job_id):
-        return '', 200
+        return JobsService.post_job_answer(request, job_id)
 
 
 @api.resource('/jobs/<job_id>')
 class JobResource(Resource):
 
     def get(self, job_id):
-        return '', 200
+        return JobsService.get_job_info(request, job_id)
 
 
 @app.route('/')
