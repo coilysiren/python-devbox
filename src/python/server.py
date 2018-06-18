@@ -59,6 +59,7 @@ class ResourceSnippets(ResourceWithErrorHandling):
         data['user'] = request.user
 
         snippet = SnippetModel(**data)
+        snippet.user.snippets_created_count += 1
         db.session.add(snippet)
         db.session.commit()
         return snippet.as_dict, 201
@@ -129,6 +130,7 @@ class ResourceSnippet(ResourceWithErrorHandling):
                 user_id=request.user.id,
             ).first()
             if not like:
+                request.snippet.user.likes_recieved_count += 1
                 db.session.add(LikeModel(
                     snippet_id=request.snippet.id,
                     user_id=request.user.id,
@@ -146,6 +148,7 @@ class ResourceSnippet(ResourceWithErrorHandling):
                 user_id=request.user.id,
             ).first()
             if not share:
+                request.user.snippets_shared_count += 1
                 db.session.add(ShareModel(
                     snippet_id=request.snippet.id,
                     user_id=request.user.id,
@@ -158,7 +161,6 @@ class ResourceSnippet(ResourceWithErrorHandling):
 
         ### final steps ###
         db.session.commit()
-        db.session.refresh(request.snippet)
         return request.snippet.as_dict, 200
 
 

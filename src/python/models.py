@@ -44,9 +44,9 @@ class UserModel(
     @property
     def achievements(self):
         return {
-            'created': self.snippets_created_count / 10,
-            'liked': self.likes_recieved_count / 10,
-            'shared': self.snippets_shared_count / 10,
+            'created': int(self.snippets_created_count / 10),
+            'liked': int(self.likes_recieved_count / 10),
+            'shared': int(self.snippets_shared_count / 10),
         }
 
     @property
