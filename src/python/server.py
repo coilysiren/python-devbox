@@ -26,16 +26,19 @@ class ResourceSnippets(ResourceWithErrorHandling):
 
     @with_authorization(optional=True)
     def get(self):
+        # add all shared snippets
         snippets = [
             snippet.as_dict
             for snippet in SnippetModel.query.filter_by(shared=True)
         ]
+        # add unshared snippets for authorized user
         if request.user:
             snippets += [
                 snippet.as_dict
                 for snippet in SnippetModel.query.filter_by(
                     shared=False, user=request.user)
             ]
+        ### response step ###
         if snippets:
             return snippets, 200
         else:
@@ -43,7 +46,7 @@ class ResourceSnippets(ResourceWithErrorHandling):
 
     @with_authorization()
     def post(self):
-
+        ### request data parsing step ###
         data = request.get_json()
         if not data:
             return 'POST data required', 400
@@ -71,6 +74,7 @@ class ResourceSnippet(ResourceWithErrorHandling):
             snippet = SnippetModel.query.filter_by(
                 id=snippet_id, shared=False, user=request.user,
             ).first()
+
         ### response step ###
         if snippet:
             # `put` needs request.snippet, `get` doesnt
@@ -88,6 +92,33 @@ class ResourceSnippet(ResourceWithErrorHandling):
         # use _snippet_resource_response to set request.snippet
         # and do the update action before you return the response
         response = self._snippet_resource_response(snippet_id)
+
+        ACTIONS = [
+            'allow_sharing',
+            'like',
+            'share'
+        ]
+
+        ### request data parsing step ###
+        data = request.get_json()
+        if not data:
+            return 'PUT data required', 400
+        elif not any([
+            data.get(action)
+            for action in ACTIONS
+        ]):
+            return f'PUT requires one of {ACTIONS}', 400
+
+        ### update actions step ###
+        # note! these are purposefully not elifs
+        if data.get('allow_sharing'):
+            request.snippet.shared = data.get('allow_sharing')
+        if data.get('like'):
+            pass
+        if data.get('share'):
+            pass
+        db.session.commit()
+
         return response
 
 
