@@ -9,7 +9,11 @@ from dotenv import load_dotenv, find_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 
-from .view_helpers import ResourceWithErrorHandling, with_authorization
+from .view_helpers import (
+    ResourceWithErrorHandling, with_authorization, UnauthorizedNotShareableException,
+    UnauthorizedCannotPerformOnOwnException, NotFoundException, BadRequestException,
+    BadRequestNoActionFoundException
+)
 from .models import db, SnippetModel, LikeModel, ShareModel
 
 
@@ -42,16 +46,16 @@ class ResourceSnippets(ResourceWithErrorHandling):
         if snippets:
             return snippets, 200
         else:
-            return [], 404
+            raise NotFoundException
 
     @with_authorization()
     def post(self):
         ### request data parsing step ###
         data = request.get_json()
         if not data:
-            return 'POST data required', 400
+            raise BadRequestException
         elif not data.get('text'):
-            return 'POST data.text required', 400
+            raise BadRequestException
         data['user'] = request.user
 
         snippet = SnippetModel(**data)
@@ -81,7 +85,7 @@ class ResourceSnippet(ResourceWithErrorHandling):
             request.snippet = snippet
             return snippet.as_dict, 200
         else:
-            return 'not found', 404
+            raise NotFoundException
 
     @with_authorization(optional=True)
     def get(self, snippet_id):
@@ -93,11 +97,7 @@ class ResourceSnippet(ResourceWithErrorHandling):
     def put(self, snippet_id):
         ### get snippet step ###
         # use _snippet_resource_response to set request.snippet
-        # and do the update action before you return the response
-        response = self._snippet_resource_response(snippet_id)
-        # ...but! exit early if the response is already bad
-        if response[1] != 200:
-            return response
+        self._snippet_resource_response(snippet_id)
 
         ### request data parsing step ###
         ACTIONS = [
@@ -107,12 +107,12 @@ class ResourceSnippet(ResourceWithErrorHandling):
         ]
         data = request.get_json()
         if not data:
-            return 'PUT data required', 400
+            raise BadRequestException
         elif not any([
             data.get(action) in [True, False]
             for action in ACTIONS
         ]):
-            return f'PUT requires one of {ACTIONS}', 400
+            raise BadRequestNoActionFoundException
 
         ### update actions step ###
         if data.get('allow_sharing'):
@@ -120,9 +120,9 @@ class ResourceSnippet(ResourceWithErrorHandling):
 
         if data.get('shared') in [True, False] or data.get('liked') in [True, False]:
             if not request.snippet.shared:
-                return 'Cannot like or share unshared snippet', 401
+                raise UnauthorizedNotShareableException
             if request.snippet.user.id == request.user.id:
-                return 'Cannot like or share your own snippet', 401
+                raise UnauthorizedCannotPerformOnOwnException
 
         if data.get('liked') == True:
             like = LikeModel.query.filter_by(

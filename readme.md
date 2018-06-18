@@ -245,6 +245,7 @@ For your work on this project and in the group session we’ll be looking at:
 - [x] authorization parsing should be a decorator with default `optional=False`
 - [ ] prep a postman demo
 - [ ] `db.create_all()` call
+- [x] define an error code pattern (ex: `ERROR_CANNOT_PERFORM_ON_OWN`) so a frontend client could display detailed errors
 
 ## TODO ( if I had +8 more hours )
 
@@ -255,7 +256,6 @@ For your work on this project and in the group session we’ll be looking at:
 - [ ] CI + codeclimate
 - [ ] some programmatic documentation generation (particularly good for apis)
 - [ ] include examples of how the endpoints would be used (in the above documentation)
-- [ ] define an error code pattern (ex: `ERROR_CANNOT_PERFORM_ON_OWN`) so a frontend client could consume errors that the enable giving verbose feedback
 - [ ] add a user endpoint
 - [ ] add more foreign keys to enable better data analysis / front-end data display
 - [ ] make code agnostic to action type, so more actions can be added

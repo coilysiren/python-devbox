@@ -21,7 +21,7 @@ def with_authorization(optional=False):
     '''
     adds authorization to a given route
 
-    uses ApiUnauthorizedException to communicate errors to ResourceWithErrorHandling
+    uses UnauthorizedInvalidHeaderException to communicate errors to ResourceWithErrorHandling
     '''
 
     def decorator(request_function):
@@ -33,7 +33,7 @@ def with_authorization(optional=False):
 
             # invalid authorization case
             if not email_address and not optional:
-                raise ApiUnauthorizedException
+                raise UnauthorizedInvalidHeaderException
 
             # valid authorization case
             else:
@@ -52,27 +52,49 @@ def with_authorization(optional=False):
     return decorator
 
 
-class ApiUnauthorizedException(BaseException):
-    '''custom exception so we can catch authorization errors on any resource route'''
+class NotFoundException(BaseException):
+    pass
+
+
+class UnauthorizedException(BaseException):
+    pass
+
+
+class UnauthorizedInvalidHeaderException(UnauthorizedException):
+    pass
+
+
+class UnauthorizedNotShareableException(UnauthorizedException):
+    pass
+
+
+class UnauthorizedCannotPerformOnOwnException(UnauthorizedException):
+    pass
+
+
+class BadRequestException(BaseException):
+    pass
+
+
+class BadRequestNoActionFoundException(BadRequestException):
     pass
 
 
 class ResourceWithErrorHandling(Resource):
     '''
-    Adds 401 and 500 handling to all resource routes
-
-    catches ApiUnauthorizedException from with_authorization
-
-    and catches BaseException for all other issues
+    Adds 40* and 500 handling to all resource routes
     '''
 
     def dispatch_request(self, *args, **kwargs):
         try:
             return super().dispatch_request(*args, **kwargs)
-        except ApiUnauthorizedException as error:
-            error_log(f'request headers: {request.headers}')
-            return 'unauthorized api request', 401
+        except BadRequestException as error:
+            return error.__class__.__name__, 400
+        except UnauthorizedException as error:
+            return error.__class__.__name__, 401
+        except NotFoundException as error:
+            return error.__class__.__name__, 404
         except BaseException as error:
             traceback.print_exc()
             error_log(error)
-            return 'server error', 500
+            return error, 500

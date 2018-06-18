@@ -11,7 +11,6 @@ def test_get_snippets_requires_snippets(test_app, session):
     response = test_app.get('/snippets')
     # assertion
     assert response.status_code == 404
-    assert len(json_body(response)) == 0
 
 
 def test_get_snippets_shows_shared_snippets(test_app, session):
@@ -35,7 +34,6 @@ def test_get_snippets_does_not_show_unshared_snippets(test_app, session):
     response = test_app.get('/snippets')
     # assertion
     assert response.status_code == 404
-    assert len(json_body(response)) == 0
 
 
 def test_get_snippets_shows_proper_count_when_mixed_types(test_app, session):
