@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from dotenv import load_dotenv, find_dotenv
 from flask_sqlalchemy import SQLAlchemy
 
@@ -41,7 +43,8 @@ class ApiModelMixin(object):
         attrs = {}
         for column in self.__table__.columns:
             attrs.update(self.get_dict_attr(column))
-        attrs['object'] = self.__class__.__name__.strip('Model')
+        pprint(vars(self.__class__))
+        attrs['object'] = self.__class__.__tablename__
         return attrs
 
 
@@ -55,7 +58,7 @@ class UserModel(
     # local attrs
     email_address = db.Column(db.String, default=True)
     # relationships
-    snippets = db.relationship('SnippetModel', backref='user', lazy=True)
+    snippets = db.relationship('SnippetModel', backref='user')
 
 
 class SnippetModel(
@@ -70,25 +73,48 @@ class SnippetModel(
     text = db.Column(db.String)
     # relationships
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    likes = db.relationship("LikeModel", back_populates="snippet")
+    shares = db.relationship("ShareModel", back_populates="snippet")
 
     @property
     def as_dict(self):
         '''
-        add alias attributes to snippet json
+        add alias attributes, and simplified attributes to snippet json
         '''
         attrs = super().as_dict
+        # alias attributes
         attrs['snippetId'] = self.id
         attrs['owner'] = attrs.get('user', {}).get('email_address')
+        # simplified attributes
+        attrs['shares'] = len(attrs.get('shares', []))
+        attrs['likes'] = len(attrs.get('likes', []))
         return attrs
 
 
-class ActionModel(
+class LikeModel(
         db.Model,
         ApiModelMixin,
 ):
     # universal attrs
-    __tablename__ = 'action'
+    __tablename__ = 'like'
     id = db.Column(db.Integer, primary_key=True)
+    # relationships
+    snippet_id = db.Column(db.Integer, db.ForeignKey('snippet.id'))
+    snippet = db.relationship("SnippetModel", back_populates="likes")
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
+class ShareModel(
+        db.Model,
+        ApiModelMixin,
+):
+    # universal attrs
+    __tablename__ = 'share'
+    id = db.Column(db.Integer, primary_key=True)
+    # relationships
+    snippet_id = db.Column(db.Integer, db.ForeignKey('snippet.id'))
+    snippet = db.relationship("SnippetModel", back_populates="shares")
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 
 class AcheievementModel(

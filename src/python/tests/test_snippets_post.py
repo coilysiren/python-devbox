@@ -68,7 +68,7 @@ def test_post_control_example_returns_snippet(test_app, session):
     )
     # assertion
     assert response.status_code == 201
-    assert json_body(response)['object'] == 'Snippet'
+    assert json_body(response)['object'] == 'snippet'
 
 
 def test_post_returns_snippet(test_app, session):
@@ -80,7 +80,7 @@ def test_post_returns_snippet(test_app, session):
     )
     # assertion
     assert response.status_code == 201
-    assert json_body(response)['object'] == 'Snippet'
+    assert json_body(response)['object'] == 'snippet'
 
 
 def test_post_respects_text_input(test_app, session):

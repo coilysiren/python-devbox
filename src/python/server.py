@@ -10,7 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 
 from .view_helpers import ResourceWithErrorHandling, with_authorization
-from .models import db, SnippetModel
+from .models import db, SnippetModel, LikeModel, ShareModel
 
 
 load_dotenv(find_dotenv())
@@ -85,21 +85,26 @@ class ResourceSnippet(ResourceWithErrorHandling):
 
     @with_authorization(optional=True)
     def get(self, snippet_id):
+        # _snippet_resource_response is basically `get`
+        # but moved into its own function so that `put` can use it also
         return self._snippet_resource_response(snippet_id)
 
     @with_authorization()
     def put(self, snippet_id):
+        ### get snippet step ###
         # use _snippet_resource_response to set request.snippet
         # and do the update action before you return the response
         response = self._snippet_resource_response(snippet_id)
+        # ...but! exit early if the response is already bad
+        if response[1] != 200:
+            return response
 
+        ### request data parsing step ###
         ACTIONS = [
             'allow_sharing',
             'like',
             'share'
         ]
-
-        ### request data parsing step ###
         data = request.get_json()
         if not data:
             return 'PUT data required', 400
@@ -114,9 +119,15 @@ class ResourceSnippet(ResourceWithErrorHandling):
         if data.get('allow_sharing'):
             request.snippet.shared = data.get('allow_sharing')
         if data.get('like'):
-            pass
+            db.session.add(LikeModel(
+                snippet=request.snippet,
+                user=request.user,
+            ))
         if data.get('share'):
-            pass
+            db.session.add(ShareModel(
+                snippet=request.snippet,
+                user=request.user,
+            ))
         db.session.commit()
 
         return response
