@@ -4,13 +4,11 @@ _note: the beginning of this document is a copy paste, my notes follow at the en
 
 ## Overview
 
-# API Design
+As part of {{ NAME }} we hand out jobs to our community of Fives. When they complete the job the five submits an answer back to our server. In this problem you will be asked to design and implement a small API to handle handing out jobs and storing the responses.
 
-As part of the Mighty AI web-service we hand out jobs to our community of Fives. When they complete the job the five submits an answer back to our server. In this problem you will be asked to design and implement a small API to handle handing out jobs and storing the responses.
+Please feel free to use any programming language, or frameworks you would like. We'd like for you to submit a fully working and executable solution, but if you can't quite get it working, please go ahead and submit whatever you have!
 
-Please feel free to use any programming language, or frameworks you would like (we're partial to Ruby on Rails if you care :)). We'd like for you to submit a fully working and executable solution, but if you can't quite get it working, please go ahead and submit whatever you have!
-
-## Requirements
+## Api Spec
 
 Write a REST-ful HTTP web-application server that has the following endpoints:
 
