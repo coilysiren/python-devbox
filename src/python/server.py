@@ -102,8 +102,8 @@ class ResourceSnippet(ResourceWithErrorHandling):
         ### request data parsing step ###
         ACTIONS = [
             'allow_sharing',
-            'like',
-            'share'
+            'liked',
+            'shared'
         ]
         data = request.get_json()
         if not data:
@@ -118,16 +118,18 @@ class ResourceSnippet(ResourceWithErrorHandling):
         # note! these are purposefully not elifs
         if data.get('allow_sharing'):
             request.snippet.shared = data.get('allow_sharing')
-        if data.get('like'):
-            db.session.add(LikeModel(
-                snippet=request.snippet,
-                user=request.user,
-            ))
-        if data.get('share'):
-            db.session.add(ShareModel(
-                snippet=request.snippet,
-                user=request.user,
-            ))
+        if data.get('liked'):
+            like = LikeModel(
+                snippet_id=request.snippet.id,
+                user_id=request.user.id,
+            )
+            db.session.add(like)
+        if data.get('shared'):
+            share = ShareModel(
+                snippet_id=request.snippet.id,
+                user_id=request.user.id,
+            )
+            db.session.add(share)
         db.session.commit()
 
         return response

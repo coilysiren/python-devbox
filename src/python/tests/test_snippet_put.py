@@ -111,7 +111,6 @@ def test_put_snippet_cannot_share_unshareable_snippet(test_app, session):
         id=snippet_id).first().as_dict['shares'] == 0
 
 
-@pytest.mark.focus
 def test_put_snippet_updates_likes(test_app, session):
     # setup
     response = test_app.post(
@@ -130,6 +129,7 @@ def test_put_snippet_updates_likes(test_app, session):
         headers={'Authorization': 'lynncyrin@gmail.com'}
     )
     # assertion
+    assert response.status_code == 200
     assert SnippetModel.query.filter_by(
         id=snippet_id).first().as_dict['likes'] == 1
 

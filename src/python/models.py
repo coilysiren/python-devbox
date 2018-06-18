@@ -2,6 +2,7 @@ from pprint import pprint
 
 from dotenv import load_dotenv, find_dotenv
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm.attributes import InstrumentedAttribute
 
 
 load_dotenv(find_dotenv())
@@ -39,11 +40,9 @@ class ApiModelMixin(object):
 
         recurses down foreign keyed models so they're all turned into dicts too
         '''
-        # the following doesnt work perfectly as a dict comprehension
         attrs = {}
         for column in self.__table__.columns:
             attrs.update(self.get_dict_attr(column))
-        pprint(vars(self.__class__))
         attrs['object'] = self.__class__.__tablename__
         return attrs
 
@@ -86,8 +85,8 @@ class SnippetModel(
         attrs['snippetId'] = self.id
         attrs['owner'] = attrs.get('user', {}).get('email_address')
         # simplified attributes
-        attrs['shares'] = len(attrs.get('shares', []))
-        attrs['likes'] = len(attrs.get('likes', []))
+        attrs['shares'] = len(self.shares)
+        attrs['likes'] = len(self.likes)
         return attrs
 
 
