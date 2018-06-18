@@ -30,6 +30,12 @@ class ResourceSnippets(ResourceWithErrorHandling):
             snippet.as_dict
             for snippet in SnippetModel.query.filter_by(shared=True)
         ]
+        if request.user:
+            snippets += [
+                snippet.as_dict
+                for snippet in SnippetModel.query.filter_by(
+                    shared=False, user=request.user)
+            ]
         if snippets:
             return snippets, 200
         else:

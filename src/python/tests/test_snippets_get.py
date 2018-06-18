@@ -52,11 +52,25 @@ def test_get_snippets_shows_proper_count_when_mixed_types(test_app, session):
 
 
 def test_get_snippets_also_shows_current_users_unshared_snippets(test_app, session):
-    # TODO, need authorization pattern first
-    pass
+    # setup
+    session.add(SnippetModel())
+    session.commit()
+    test_app.post(
+        '/snippets',
+        json={'text': 'rawr', 'shared': False},
+        headers={'Authorization': 'lynncyrin@gmail.com'}
+    )
+    # function under test
+    response = test_app.get(
+        '/snippets',
+        headers={'Authorization': 'lynncyrin@gmail.com'}
+    )
+    # assertion
+    assert response.status_code == 200
+    assert len(json_body(response)) == 2
 
 
-def test_get_snippets_default_to_TODO(test_app, session):
+def test_get_snippets_default_to_shared(test_app, session):
     # setup
     session.add(SnippetModel())
     session.commit()

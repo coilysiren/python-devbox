@@ -28,6 +28,7 @@ def with_authorization(optional=False):
         @wraps(request_function)
         def decorated_function(*args, **kwargs):
 
+            request.user = None
             email_address = request.headers.get('Authorization')
 
             # invalid authorization case
