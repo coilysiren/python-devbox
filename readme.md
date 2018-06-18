@@ -240,11 +240,9 @@ For your work on this project and in the group session we’ll be looking at:
 
 ## TODO
 
-- [ ] can TDD the endpoints and error cases
-- [ ] define "least effort" versions of each endpoint
+- [ ] TDD the endpoints and error cases
 - [x] authorization parsing should be a decorator with default `optional=False`
 - [ ] prep a postman demo
-- [ ] `db.create_all()` call
 - [x] define an error code pattern (ex: `ERROR_CANNOT_PERFORM_ON_OWN`) so a frontend client could display detailed errors
 
 ## TODO ( if I had +8 more hours )
