@@ -27,7 +27,7 @@ class ResourceSnippets(ResourceWithErrorHandling):
     @with_authorization(optional=True)
     def get(self):
         snippets = [
-            snippet.as_dict
+            snippet.as_dict()
             for snippet in SnippetModel.query.filter_by(shared=True)
         ]
         if snippets:
@@ -37,17 +37,18 @@ class ResourceSnippets(ResourceWithErrorHandling):
 
     @with_authorization()
     def post(self):
-        data = request.get_json()
 
+        data = request.get_json()
         if not data:
             return 'POST data required', 400
         elif not data.get('text'):
             return 'POST data.text required', 400
+        data['user'] = request.user
 
         snippet = SnippetModel(**data)
         db.session.add(snippet)
         db.session.commit()
-        return snippet.as_dict, 201
+        return snippet.as_dict(), 201
 
 
 @app.route('/')

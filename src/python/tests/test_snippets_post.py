@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from .test_helper import json_body
+from .helper import json_body
 from .test_fixtures import app, db, session, test_app
 
 
@@ -128,3 +128,16 @@ def test_post_respects_share_input_true(test_app, session):
     # assertion
     assert response.status_code == 201
     assert json_body(response)['shared'] == True
+
+
+def test_post_returns_authorized_user_object(test_app, session):
+    # function under test
+    response = test_app.post(
+        '/snippets',
+        json={'text': 'rawr', 'shared': True},
+        headers={'Authorization': 'lynncyrin@gmail.com'}
+    )
+    # assertion
+    assert response.status_code == 201
+    assert json_body(response)[
+        'user']['email_address'] == 'lynncyrin@gmail.com'
