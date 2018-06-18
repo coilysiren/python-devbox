@@ -261,3 +261,4 @@ For your work on this project and in the group session we’ll be looking at:
 - the get endpoint returns unshared snippets for the currently authorized user. the idea here is that your "home timeline" isn't just "all shared posts" but instead "all posts you can see". "all posts you can see" means "shared posts" and also "unshared posts that you own". **@ProductManager**: this should be accounted for on the front-end, likely via graying out the unshared snippets
 - unshared snippets return "404 not found" rather than "401 unauthorized" with accessed by a user that doesn't own them. this is a fairly standard pattern, but should still be flagged.
 - there's some namespace collision issues around "share". A new version of the API spec needs to differentiate `shareable_status` vs `share_count` vs `share_action`
+- since users cannot like their own snippets, I asssumed they would also not be able to share their own snippets

@@ -60,7 +60,7 @@ def test_put_snippet_updates_shares(test_app, session):
     response = test_app.put(
         f'/snippets/{snippet_id}',
         json={'shared': True},
-        headers={'Authorization': 'lynncyrin@gmail.com'}
+        headers={'Authorization': 'totallynotlynncyrin@gmail.com'}
     )
     # assertion
     assert response.status_code == 200
@@ -104,10 +104,10 @@ def test_put_snippet_cannot_share_unshareable_snippet(test_app, session):
     response = test_app.put(
         f'/snippets/{snippet_id}',
         json={'shared': True},
-        headers={'Authorization': 'lynncyrin@gmail.com'}
+        headers={'Authorization': 'totallynotlynncyrin@gmail.com'}
     )
     # assertion
-    assert response.status_code == 401
+    assert response.status_code != 200
     assert SnippetModel.query.filter_by(
         id=snippet_id).first().as_dict['shares'] == 0
 
@@ -127,7 +127,7 @@ def test_put_snippet_updates_likes(test_app, session):
     response = test_app.put(
         f'/snippets/{snippet_id}',
         json={'liked': True},
-        headers={'Authorization': 'lynncyrin@gmail.com'}
+        headers={'Authorization': 'totallynotlynncyrin@gmail.com'}
     )
     # assertion
     assert response.status_code == 200
@@ -150,7 +150,7 @@ def test_put_snippet_updated_data_returned_in_response(test_app, session):
     response = test_app.put(
         f'/snippets/{snippet_id}',
         json={'liked': True},
-        headers={'Authorization': 'lynncyrin@gmail.com'}
+        headers={'Authorization': 'totallynotlynncyrin@gmail.com'}
     )
     # assertion
     assert response.status_code == 200
@@ -173,16 +173,35 @@ def test_put_snippet_actions_return_their_performer(test_app, session):
     response = test_app.put(
         f'/snippets/{snippet_id}',
         json={'liked': True},
-        headers={'Authorization': 'lynncyrin@gmail.com'}
+        headers={'Authorization': 'totallynotlynncyrin@gmail.com'}
     )
     # assertion
     assert response.status_code == 200
     assert json_body(response)[
-        'likes_data'][0]['performer']['email_address'] == 'lynncyrin@gmail.com'
+        'likes_data'][0]['performer']['email_address'] == 'totallynotlynncyrin@gmail.com'
 
 
-def test_put_snippet_can_share_own_snippet(test_app, session):
-    pass
+def test_put_snippet_cannot_share_own_snippet(test_app, session):
+    # setup
+    response = test_app.post(
+        '/snippets',
+        json={'text': 'example', 'shared': True},
+        headers={'Authorization': 'lynncyrin@gmail.com'}
+    )
+    snippet_id = json_body(response)['id']
+    # control assertion
+    assert SnippetModel.query.filter_by(
+        id=snippet_id).first().as_dict['shares'] == 0
+    # function under test
+    response = test_app.put(
+        f'/snippets/{snippet_id}',
+        json={'shared': True},
+        headers={'Authorization': 'lynncyrin@gmail.com'}
+    )
+    # assertion
+    assert response.status_code == 401
+    assert SnippetModel.query.filter_by(
+        id=snippet_id).first().as_dict['shares'] == 0
 
 
 def test_put_snippet_can_like_own_snippet(test_app, session):

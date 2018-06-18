@@ -118,21 +118,22 @@ class ResourceSnippet(ResourceWithErrorHandling):
         if data.get('allow_sharing'):
             request.snippet.shared = data.get('allow_sharing')
 
-        if (data.get('shared') or data.get('liked')) and not request.snippet.shared:
-            return 'Cannot like or share unshared snippet', 401
+        if data.get('shared') or data.get('liked'):
+            if not request.snippet.shared:
+                return 'Cannot like or share unshared snippet', 401
+            if request.snippet.user.id == request.user.id:
+                return 'Cannot like or share your own snippet', 401
 
-        if data.get('liked'):
-            like = LikeModel(
+        if data.get('liked') == True:
+            db.session.add(LikeModel(
                 snippet_id=request.snippet.id,
                 user_id=request.user.id,
-            )
-            db.session.add(like)
-        if data.get('shared'):
-            share = ShareModel(
+            ))
+        if data.get('shared') == True:
+            db.session.add(ShareModel(
                 snippet_id=request.snippet.id,
                 user_id=request.user.id,
-            )
-            db.session.add(share)
+            ))
 
         db.session.commit()
         db.session.refresh(request.snippet)
