@@ -9,14 +9,26 @@ from .models import db, UserModel
 
 
 def errorLog(log):
+    '''
+    use so you can visually scan for [LOG] in your output
+
+    writes to stderr to avoid buffering / capturing / etc
+    '''
     print(f'[LOG] {log}', file=sys.stderr)
 
 
 class ApiUnauthorizedException(BaseException):
+    '''custom exception so we can catch authorization errors on any resource route'''
     pass
 
 
 def with_authorization(optional=False):
+    '''
+    adds authorization to a given route
+
+    uses ApiUnauthorizedException to communicate errors to ResourceWithErrorHandling
+    '''
+
     def decorator(request_function):
         @wraps(request_function)
         def decorated_function(*args, **kwargs):
@@ -45,14 +57,21 @@ def with_authorization(optional=False):
 
 
 class ResourceWithErrorHandling(Resource):
+    '''
+    Adds 401 and 500 handling to all resource routes
+
+    catches ApiUnauthorizedException from with_authorization
+
+    and catches BaseException for all other issues
+    '''
 
     def dispatch_request(self, *args, **kwargs):
         try:
             return super().dispatch_request(*args, **kwargs)
-        except ApiUnauthorizedException as e:
+        except ApiUnauthorizedException as error:
             errorLog(f'request headers: {request.headers}')
             return 'unauthorized api request', 401
-        except BaseException as e:
+        except BaseException as error:
             traceback.print_exc()
-            errorLog(e)
+            errorLog(error)
             return 'server error', 500
