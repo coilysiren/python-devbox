@@ -27,7 +27,7 @@ class ResourceSnippets(ResourceWithErrorHandling):
     @with_authorization(optional=True)
     def get(self):
         snippets = [
-            snippet.as_dict()
+            snippet.as_dict
             for snippet in SnippetModel.query.filter_by(shared=True)
         ]
         if snippets:
@@ -48,7 +48,7 @@ class ResourceSnippets(ResourceWithErrorHandling):
         snippet = SnippetModel(**data)
         db.session.add(snippet)
         db.session.commit()
-        return snippet.as_dict(), 201
+        return snippet.as_dict, 201
 
 
 @app.route('/')

@@ -17,7 +17,7 @@ class ApiModelMixin(object):
                 foreign_model = getattr(self, short_name)
                 # and return their "short_name" with their attrs as a dict
                 if foreign_model:
-                    return {short_name: foreign_model.as_dict()}
+                    return {short_name: foreign_model.as_dict}
                 # or nothing, if theres no valid foreign model
                 else:
                     return {}
@@ -25,13 +25,14 @@ class ApiModelMixin(object):
         else:
             return {column.name: getattr(self, column.name)}
 
+    @property
     def as_dict(self):
         '''
         turns the current model into a dictionary, so we can turn it into a json response
 
         recurses down foreign keyed models so they're all turned into dicts too
         '''
-        # the following is a tad to complicated to be a dict comprehension
+        # the following doesnt work perfectly as a dict comprehension
         attrs = {}
         for column in self.__table__.columns:
             attrs.update(self.get_dict_attr(column))
