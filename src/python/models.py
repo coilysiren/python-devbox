@@ -9,18 +9,28 @@ db = SQLAlchemy()
 class ApiModelMixin(object):
 
     def get_dict_attr(self, column):
-        from pprint import pprint
+        # if this column is a set of foreign keys
         if column.foreign_keys:
+            # get all those foreign keys
             for foreign_key in column.foreign_keys:
                 short_name = foreign_key.parent.name.strip('_id')
                 foreign_model = getattr(self, short_name)
-                try:
+                # and return their "short_name" with their attrs as a dict
+                if foreign_model:
                     return {short_name: foreign_model.as_dict()}
-                except BaseException:
-                    return {short_name: foreign_model}
-        return {column.name: getattr(self, column.name)}
+                # or nothing, if theres no valid foreign model
+                else:
+                    return {}
+        # otherwise its a regular attr, so we return that
+        else:
+            return {column.name: getattr(self, column.name)}
 
     def as_dict(self):
+        '''
+        turns the current model into a dictionary, so we can turn it into a json response
+
+        recurses down foreign keyed models so they're all turned into dicts too
+        '''
         # the following is a tad to complicated to be a dict comprehension
         attrs = {}
         for column in self.__table__.columns:
