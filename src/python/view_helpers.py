@@ -38,6 +38,11 @@ def with_authorization(optional=False):
                     db.session.commit()
                 # continue executing reponse with user set on the request
                 request.user = user
+                # resolve duplicate `self` arguement
+                # (no idea where it comes from, though)
+                if args[0] == args[1]:
+                    args = list(args)
+                    args.pop(0)
                 return request_function(*args, **kwargs)
 
         return decorated_function
@@ -48,7 +53,7 @@ class ResourceWithErrorHandling(Resource):
 
     def dispatch_request(self, *args, **kwargs):
         try:
-            super().dispatch_request(self, *args, **kwargs)
+            return super().dispatch_request(self, *args, **kwargs)
         except ApiUnauthorizedException as e:
             errorLog(f'request headers: {request.headers}')
             return 'unauthorized api request', 401
