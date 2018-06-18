@@ -9,7 +9,7 @@ from dotenv import load_dotenv, find_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 
-from .view_helpers import ResourceWithErrorHandling, with_authorization, errorLog
+from .view_helpers import ResourceWithErrorHandling, with_authorization
 from .models import db, SnippetModel
 
 
@@ -40,10 +40,8 @@ class ResourceSnippets(ResourceWithErrorHandling):
         data = request.get_json()
 
         if not data:
-            errorLog(data)
             return 'POST data required', 400
         elif not data.get('text'):
-            errorLog(data)
             return 'POST data.text required', 400
 
         snippet = SnippetModel(**data)

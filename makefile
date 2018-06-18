@@ -1,6 +1,9 @@
 dev:
 	pytest-watch
 
+focus:
+	pytest-watch -- -m focus
+
 __dev-old:
 	npx concurrently \
 		-k -n angular,flask \

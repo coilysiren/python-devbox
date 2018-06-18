@@ -25,7 +25,7 @@ class UserModel(
     # universal attrs
     id = db.Column(db.Integer, primary_key=True)
     # local attrs
-    email_address = db.Column(db.Boolean, default=True)
+    email_address = db.Column(db.String, default=True)
     # relationships
     snippets = db.relationship('SnippetModel', backref='user', lazy=True)
 
