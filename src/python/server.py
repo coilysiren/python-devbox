@@ -140,10 +140,6 @@ class ResourceSnippet(ResourceWithErrorHandling):
                 user_id=request.user.id,
             ).delete()
 
-        from .view_helpers import error_log
-
-        error_log(f'data {data}')
-
         if data.get('shared') == True:
             share = ShareModel.query.filter_by(
                 snippet_id=request.snippet.id,
@@ -155,7 +151,6 @@ class ResourceSnippet(ResourceWithErrorHandling):
                     user_id=request.user.id,
                 ))
         elif data.get('shared') == False:
-            error_log('deleting a ShareModel')
             ShareModel.query.filter_by(
                 snippet_id=request.snippet.id,
                 user_id=request.user.id,
