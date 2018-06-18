@@ -1,4 +1,5 @@
 from ..models import JobModel
+from ..server import TOTAL_SEED_JOBS
 from .helper import json_body
 from .test_fixtures import app, db, session, test_app
 

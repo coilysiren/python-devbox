@@ -19,6 +19,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/pythondevbox_v5.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 api = Api(app)
 db.init_app(app)
+TOTAL_SEED_JOBS = 20
 
 
 @api.resource('/jobs')
@@ -45,6 +46,17 @@ class JobResource(Resource):
 @app.route('/')
 def index():
     return 'hello world!!'
+
+
+@app.route('/api/seed')
+def lazy_girls_seed_data_route():
+    for i in range(TOTAL_SEED_JOBS):
+        db.session.add(JobModel(
+            snippet_id=request.snippet.id,
+            user_id=request.user.id,
+        ))
+    db.session.commit()
+    return 'data seeded!'
 
 
 @app.route('/api/ping')

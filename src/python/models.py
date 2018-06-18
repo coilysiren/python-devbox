@@ -32,6 +32,6 @@ class JobModel(
     __tablename__ = 'job'
     id = db.Column(db.Integer, primary_key=True)
     # local attrs
-    question_text = db.Column(db.String, default=True)
-    response_text = db.Column(db.String, default=True)
-    status_text = db.Column(db.String, default=True)
+    question_text = db.Column(db.String, default='What is your name?')
+    response_text = db.Column(db.String)
+    status_text = db.Column(db.String)
