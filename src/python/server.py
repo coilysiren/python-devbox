@@ -67,7 +67,7 @@ class ResourceSnippets(ResourceWithErrorHandling):
 @api.resource('/snippets/<snippet_id>')
 class ResourceSnippet(ResourceWithErrorHandling):
 
-    def _snippet_resource_response(self, snippet_id):
+    def _process_snippet_request(self, snippet_id):
         ### snippet retrieval step ###
         # look for shared for a shared snippet with this id
         snippet = SnippetModel.query.filter_by(
@@ -89,41 +89,40 @@ class ResourceSnippet(ResourceWithErrorHandling):
 
     @with_authorization(optional=True)
     def get(self, snippet_id):
-        # _snippet_resource_response is basically `get`
+        # _process_snippet_request is basically `get`
         # but moved into its own function so that `put` can use it also
-        return self._snippet_resource_response(snippet_id)
+        return self._process_snippet_request(snippet_id)
 
     @with_authorization()
     def put(self, snippet_id):
-        ### get snippet step ###
-        # use _snippet_resource_response to set request.snippet
-        self._snippet_resource_response(snippet_id)
+        # use _process_snippet_request to set request.snippet
+        # it will also exit early with errors as needed
+        self._process_snippet_request(snippet_id)
 
         ### request data parsing step ###
-        ACTIONS = [
-            'allow_sharing',
-            'liked',
-            'shared'
-        ]
         data = request.get_json()
         if not data:
             raise BadRequestException
         elif not any([
             data.get(action) in [True, False]
-            for action in ACTIONS
+            for action in [
+                'allow_sharing',
+                'liked',
+                'shared'
+            ]
         ]):
             raise BadRequestNoActionFoundException
 
         ### update actions step ###
         if data.get('allow_sharing'):
             request.snippet.shared = data.get('allow_sharing')
-
         if data.get('shared') in [True, False] or data.get('liked') in [True, False]:
             if not request.snippet.shared:
                 raise UnauthorizedNotShareableException
             if request.snippet.user.id == request.user.id:
                 raise UnauthorizedCannotPerformOnOwnException
 
+        ### update action liked ###
         if data.get('liked') == True:
             like = LikeModel.query.filter_by(
                 snippet_id=request.snippet.id,
@@ -140,6 +139,7 @@ class ResourceSnippet(ResourceWithErrorHandling):
                 user_id=request.user.id,
             ).delete()
 
+        ### update action shared ###
         if data.get('shared') == True:
             share = ShareModel.query.filter_by(
                 snippet_id=request.snippet.id,
@@ -156,9 +156,9 @@ class ResourceSnippet(ResourceWithErrorHandling):
                 user_id=request.user.id,
             ).delete()
 
+        ### final steps ###
         db.session.commit()
         db.session.refresh(request.snippet)
-
         return request.snippet.as_dict, 200
 
 

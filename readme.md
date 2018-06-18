@@ -260,6 +260,8 @@ For your work on this project and in the group session we’ll be looking at:
 - [ ] add more foreign keys to enable better data analysis / front-end data display
 - [ ] make code agnostic to action type, so more actions can be added
 - [ ] type casting where needed (particularly on the booleans)
+- [ ] sqlalchemy custom query classes, to cut down on the amount of code in the views
+- [ ] push code down from views into a (new) formal service layer, that sits between the views and models
 
 ## Questions / Clarifications / Decisions
 

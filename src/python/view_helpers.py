@@ -82,7 +82,7 @@ class BadRequestNoActionFoundException(BadRequestException):
 
 class ResourceWithErrorHandling(Resource):
     '''
-    Adds 40* and 500 handling to all resource routes
+    Adds 400* and 500 handling to all resource routes
     '''
 
     def dispatch_request(self, *args, **kwargs):
