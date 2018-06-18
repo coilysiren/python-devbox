@@ -9,6 +9,11 @@ db = SQLAlchemy()
 class ApiModelMixin(object):
 
     def get_dict_attr(self, column):
+        '''
+        turns sql columns into dictionary attributes, given:
+         - foreign keys
+         - normal attributes (strings, bools, etc)
+        '''
         # if this column is a set of foreign keys
         if column.foreign_keys:
             # get all those foreign keys
