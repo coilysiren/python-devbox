@@ -60,15 +60,35 @@ class ResourceSnippets(ResourceWithErrorHandling):
 @api.resource('/snippets/<snippet_id>')
 class ResourceSnippet(ResourceWithErrorHandling):
 
+    def _snippet_resource_response(self, snippet_id):
+        ### snippet retrieval step ###
+        # look for shared for a shared snippet with this id
+        snippet = SnippetModel.query.filter_by(
+            id=snippet_id, shared=True).first()
+        # otherwise, look for an unshared snippet with this id
+        # if there is an authorized user on this request
+        if not snippet and request.user:
+            snippet = SnippetModel.query.filter_by(
+                id=snippet_id, shared=False, user=request.user,
+            ).first()
+        ### response step ###
+        if snippet:
+            # `put` needs request.snippet, `get` doesnt
+            request.snippet = snippet
+            return snippet.as_dict, 200
+        else:
+            return 'not found', 404
+
     @with_authorization(optional=True)
     def get(self, snippet_id):
-        snippet = SnippetModel.query.filter_by(id=snippet_id).first()
-        return snippet.as_dict, 200
+        return self._snippet_resource_response(snippet_id)
 
     @with_authorization()
     def put(self, snippet_id):
-        snippet = SnippetModel.query.filter_by(id=snippet_id).first()
-        return snippet.as_dict, 200
+        # use _snippet_resource_response to set request.snippet
+        # and do the update action before you return the response
+        response = self._snippet_resource_response(snippet_id)
+        return response
 
 
 @app.route('/')
