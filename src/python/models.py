@@ -11,28 +11,6 @@ db = SQLAlchemy()
 
 class ApiModelMixin(object):
 
-    def get_dict_attr(self, column):
-        '''
-        turns sql columns into dictionary attributes, given:
-         - foreign keys
-         - normal attributes (strings, bools, etc)
-        '''
-        # if this column is a set of foreign keys
-        if column.foreign_keys:
-            # get all those foreign keys
-            for foreign_key in column.foreign_keys:
-                short_name = foreign_key.parent.name.strip('_id')
-                foreign_model = getattr(self, short_name)
-                # and return their "short_name" with their attrs as a dict
-                if foreign_model:
-                    return {short_name: foreign_model.as_dict}
-                # or nothing, if theres no valid foreign model
-                else:
-                    return {}
-        # otherwise its a regular attr, so we return that
-        else:
-            return {column.name: getattr(self, column.name)}
-
     @property
     def as_dict(self):
         '''
@@ -40,16 +18,17 @@ class ApiModelMixin(object):
 
         recurses down foreign keyed models so they're all turned into dicts too
         '''
-        attrs = {}
-        for column in self.__table__.columns:
-            attrs.update(self.get_dict_attr(column))
+        attrs = {
+            column.name: getattr(self, column.name)
+            for column in self.__table__.columns
+        }
         attrs['object'] = self.__class__.__tablename__
         return attrs
 
 
 class UserModel(
-        db.Model,
         ApiModelMixin,
+        db.Model,
 ):
     # universal attrs
     __tablename__ = 'user'
@@ -61,8 +40,8 @@ class UserModel(
 
 
 class SnippetModel(
-        db.Model,
         ApiModelMixin,
+        db.Model,
 ):
     # universal attrs
     __tablename__ = 'snippet'
@@ -81,18 +60,31 @@ class SnippetModel(
         add alias attributes, and simplified attributes to snippet json
         '''
         attrs = super().as_dict
+        # relationships
+        attrs['user'] = self.user.as_dict if self.user else {}
+        attrs['shares'] = len(self.shares)
+        attrs['likes'] = len(self.likes)
+        attrs['shares_data'] = [share.as_dict for share in self.shares]
+        attrs['likes_data'] = [like.as_dict for like in self.likes]
         # alias attributes
         attrs['snippetId'] = self.id
         attrs['owner'] = attrs.get('user', {}).get('email_address')
-        # simplified attributes
-        attrs['shares'] = len(self.shares)
-        attrs['likes'] = len(self.likes)
+        return attrs
+
+
+class ActionPerformerMixin(object):
+
+    @property
+    def as_dict(self):
+        attrs = super().as_dict
+        attrs['performer'] = self.user.as_dict if self.user else {}
         return attrs
 
 
 class LikeModel(
-        db.Model,
+        ActionPerformerMixin,
         ApiModelMixin,
+        db.Model,
 ):
     # universal attrs
     __tablename__ = 'like'
@@ -101,11 +93,13 @@ class LikeModel(
     snippet_id = db.Column(db.Integer, db.ForeignKey('snippet.id'))
     snippet = db.relationship("SnippetModel", back_populates="likes")
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship("UserModel")
 
 
 class ShareModel(
-        db.Model,
+        ActionPerformerMixin,
         ApiModelMixin,
+        db.Model,
 ):
     # universal attrs
     __tablename__ = 'share'
@@ -114,11 +108,12 @@ class ShareModel(
     snippet_id = db.Column(db.Integer, db.ForeignKey('snippet.id'))
     snippet = db.relationship("SnippetModel", back_populates="shares")
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship("UserModel")
 
 
 class AcheievementModel(
-        db.Model,
         ApiModelMixin,
+        db.Model,
 ):
     # universal attrs
     __tablename__ = 'achievement'

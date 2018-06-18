@@ -135,8 +135,9 @@ class ResourceSnippet(ResourceWithErrorHandling):
             db.session.add(share)
 
         db.session.commit()
+        db.session.refresh(request.snippet)
 
-        return response
+        return request.snippet.as_dict, 200
 
 
 @app.route('/')
