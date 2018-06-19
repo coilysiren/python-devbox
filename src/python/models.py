@@ -34,3 +34,12 @@ class JobModel(
     # local attrs
     question = db.Column(db.String, default='What is your name?')
     response = db.Column(db.String)
+
+    @property
+    def as_dict(self):
+        data = super().as_dict
+        if self.response:
+            data['status'] = 'closed'
+        else:
+            data['status'] = 'open'
+        return data

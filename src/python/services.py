@@ -89,19 +89,16 @@ class JobsService(object):
     @service_error_handler
     def post_job_answer(self, request, job_id):
         job = self._get_job(job_id)
-        return job.as_dict, 200
+        data = self._get_post_answer_data(request)
+        job = self._set_response(job, data['response'])
+        job_data = job.as_dict
+        job_data['status'] = 'ok'
+        return job_data, 200
 
     @service_error_handler
     def get_job_info(self, request, job_id):
         job = self._get_job(job_id)
-        data = self._get_post_answer_data(request)
-        job = self._set_response(job, data['response'])
-        db.session.add(job)
-        db.session.commit()
-
-        job_data = job.as_dict
-        job_data['status'] = 'ok'
-        return job_data, 200
+        return job.as_dict, 200
 
     def _get_jobs(self):
         jobs = [
@@ -123,7 +120,7 @@ class JobsService(object):
         if not data:
             raise BadRequestNoDataException
         if not data.get('response'):
-            raise BadRequestNoDataException
+            raise BadRequestMissingAttributeException
         return data
 
     def _set_response(self, job, response):
@@ -132,4 +129,6 @@ class JobsService(object):
         if job.response:
             raise ForbiddenException
         job.response = response
+        db.session.add(job)
+        db.session.commit()
         return job
