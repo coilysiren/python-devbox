@@ -37,15 +37,14 @@ Write a REST-ful HTTP web-application server that has the following endpoints:
 
 ## Plan
 
-- restart infra
-- pre-populate jobs
-- spec get available jobs
-- spec get unavailable jobs not shown
-- spec post answer job
-- spec post answer twice returns duplicate status
-- spec post cannot answer others job
-- spec get job details
-- frontend???
+- [x] restart infra
+- [x] pre-populate jobs
+- [x] spec get available jobs
+- [x] spec get unavailable jobs not shown
+- [ ] spec post answer job
+- [ ] spec post answer twice returns duplicate status
+- [ ] spec post cannot answer others job
+- [ ] spec get job details
 
 ## Data
 

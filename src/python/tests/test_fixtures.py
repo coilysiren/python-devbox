@@ -65,8 +65,6 @@ def session(db, request):
         db.session.add(JobModel())
     db.session.commit()
 
-    print('setup seed data')
-
     def teardown():
         transaction.rollback()
         connection.close()
