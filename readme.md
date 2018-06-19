@@ -58,8 +58,8 @@ Write a REST-ful HTTP web-application server that has the following endpoints:
 - [x] spec post answer twice returns duplicate status
 - [x] spec post cannot answer others job
 - [x] spec get job details
-- [ ] always return status as a part of job data
-- [ ] validate against spec
+- [x] always return status as a part of job data
+- [x] validate against spec
 
 ## Data
 
