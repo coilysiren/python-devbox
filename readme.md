@@ -18,7 +18,7 @@ Write a REST-ful HTTP web-application server that has the following endpoints:
 | POST   | /jobs/{job_id}/answer | { "id" : 4, "response": "Taylor" } | { "status": "ok" }                                                                     | Submits the answer to the server.                                  |
 | GET    | /jobs/{job_id}        |                                    | { "id": 4, "question": "What is your name?" "response": "Taylor", "status": "closed" } | Gets a specific job including the answer if it has been submitted. |
 
-## Notes
+## Exercise Notes
 
 - The api spec is the minimum that should be sent/received. Feel free to add other fields
 - A Job should only ever get served to a single Five at a time
@@ -32,8 +32,20 @@ Write a REST-ful HTTP web-application server that has the following endpoints:
 ## Questions
 
 - What datastore would you use in production? Why?
+  - first choice: postgres, its the best default option when nothing about your data format begs an alternative format
+  - second choice: mongodb, since (presently) the system can be represented fairly effectively by a document store
 - What would be the next set of features you would consider to build?
+  - user models / authentication, the model for this is currently very naive
+  - the ability to decline an already accepted job
+  - make status integers, storing strings should be avoided whenever its (easily) possible
 - Why did you choose the language / framework that you did? Did you consider any others?
+  - python / flask is the setup I have the most experience with, and its also a fairly effective choice for small scale api servers
+  - ruby / rails would be my second choice, since there's generally mild bonus points for using the language your interviewer suggests ^^
+  - python / django would be my third choice, it generally supercedes flask if / when an application grows
+
+## Personal Notes
+
+- the api spec implies that answer is a seperate resource, but I think its best understood as an attribute on jobs. the would change the second route to `PUT :: /jobs/{job_id}`. I use a 409 response on that route to represent response collisions, and 409s are generally used in `PUT` requests.
 
 ## Plan
 
@@ -44,7 +56,7 @@ Write a REST-ful HTTP web-application server that has the following endpoints:
 - [ ] spec post answer job
 - [ ] spec post answer twice returns duplicate status
 - [ ] spec post cannot answer others job
-- [ ] spec get job details
+- [x] spec get job details
 
 ## Data
 
