@@ -71,7 +71,12 @@ class JobsService(object):
 
     @service_error_handler
     def get_all_jobs(self, request):
-        return '', 200
+        error_log('running job query')
+        jobs = [
+            job.as_dict
+            for job in JobModel.query.all()
+        ]
+        return jobs, 200
 
     @service_error_handler
     def post_job_answer(self, request, job_id):

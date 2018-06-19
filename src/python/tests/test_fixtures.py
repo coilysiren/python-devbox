@@ -1,7 +1,11 @@
 import pytest
 
-from ..server import app as _app
-from ..server import db as _db
+from ..models import JobModel
+from ..server import (
+    db as _db,
+    app as _app,
+    TOTAL_SEED_JOBS,
+)
 
 
 # ref: http://alexmic.net/flask-sqlalchemy-pytest/
@@ -56,6 +60,12 @@ def session(db, request):
     session = db.create_scoped_session(options=options)
 
     db.session = session
+
+    for i in range(TOTAL_SEED_JOBS):
+        db.session.add(JobModel())
+    db.session.commit()
+
+    print('setup seed data')
 
     def teardown():
         transaction.rollback()

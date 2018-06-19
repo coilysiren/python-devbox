@@ -51,10 +51,7 @@ def index():
 @app.route('/api/seed')
 def lazy_girls_seed_data_route():
     for i in range(TOTAL_SEED_JOBS):
-        db.session.add(JobModel(
-            snippet_id=request.snippet.id,
-            user_id=request.user.id,
-        ))
+        db.session.add(JobModel())
     db.session.commit()
     return 'data seeded!'
 

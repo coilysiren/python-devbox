@@ -9,3 +9,4 @@ def test_jobs_get_control(test_app, session):
     response = test_app.get('/jobs')
     # assertion
     assert response.status_code == 200
+    assert len(json_body(response)) == TOTAL_SEED_JOBS
