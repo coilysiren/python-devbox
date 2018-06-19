@@ -12,6 +12,8 @@ def test_job_answer_post_control(test_app, session):
     )
     # assertion
     assert response.status_code == 200
+    body = json_body(response)
+    assert body['status'] == 'ok'
 
 
 def test_job_answer_bad_data_case_one(test_app, session):
@@ -41,8 +43,8 @@ def test_job_answer_returns_updated_job_info(test_app, session):
     )
     # assertion
     assert response.status_code == 200
-    assert type(json_body(response)) == dict
-    assert json_body(response)['response'] == 'Cats'
+    body = json_body(response)
+    assert body['response'] == 'Cats'
 
 
 def test_job_answer_cannot_answer_others(test_app, session):

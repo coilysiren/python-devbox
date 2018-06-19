@@ -34,4 +34,3 @@ class JobModel(
     # local attrs
     question = db.Column(db.String, default='What is your name?')
     response = db.Column(db.String)
-    status = db.Column(db.String)

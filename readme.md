@@ -46,6 +46,8 @@ Write a REST-ful HTTP web-application server that has the following endpoints:
 ## Personal Notes
 
 - the api spec implies that answer is a seperate resource, but I think its best understood as an attribute on jobs. the would change the second route to `PUT :: /jobs/{job_id}`. I use a 409 response on that route to represent response collisions, and 409s are generally used in `PUT` requests.
+- I would reccomend returning the newly created resoures in POST responses, rather than `{ status: ok }`. In general ok statuses are sufficiently covered by the status code being `200`
+- A next step would be to refactor the service layer to use classmethods (to enable easier testing), and have it operate on a less complex input than the flask `request` object (also for testing!).
 
 ## Plan
 
@@ -53,10 +55,11 @@ Write a REST-ful HTTP web-application server that has the following endpoints:
 - [x] pre-populate jobs
 - [x] spec get available jobs
 - [x] spec get unavailable jobs not shown
-- [ ] spec post answer job
-- [ ] spec post answer twice returns duplicate status
-- [ ] spec post cannot answer others job
+- [x] spec post answer job
+- [x] spec post answer twice returns duplicate status
+- [x] spec post cannot answer others job
 - [x] spec get job details
+- [ ] validate against spec
 
 ## Data
 
@@ -64,4 +67,3 @@ Jobs model
 
 - question text
 - response text
-- status text (could be an int, but text will allow faster iteration)
