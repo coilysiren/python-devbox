@@ -14,7 +14,6 @@ from .models import db, JobModel
 
 load_dotenv(find_dotenv())
 app = Flask(__name__)
-app.secret_key = os.environ['SECRET_KEY']
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/pythondevbox_v5.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 api = Api(app)

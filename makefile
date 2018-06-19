@@ -1,3 +1,6 @@
+test:
+	pytest
+
 dev:
 	pytest-watch
 
