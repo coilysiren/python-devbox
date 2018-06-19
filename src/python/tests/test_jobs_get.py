@@ -26,7 +26,7 @@ def test_jobs_none_present(test_app, session):
 def test_jobs_responding_to_job_makes_it_unavailable(test_app, session):
     # setup
     job = JobModel.query.all()[0]
-    job.response_text = 'Cats'
+    job.response = 'Cats'
     session.add(job)
     session.commit()
     # function under test
