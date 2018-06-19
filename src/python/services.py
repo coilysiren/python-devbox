@@ -49,14 +49,12 @@ class BadRequestMissingAttributeException(BadRequestException):
     pass
 
 
-class ResourceWithErrorHandling(Resource):
-    '''
-    Adds 400* and 500 handling to all resource routes
-    '''
+def service_error_handler(service_func):
 
-    def dispatch_request(self, *args, **kwargs):
+    def wrapper(*args, **kwargs):
+
         try:
-            return super().dispatch_request(*args, **kwargs)
+            return service_func(*args, **kwargs)
         except BadRequestException as error:
             return error.__class__.__name__, 400
         except NotFoundException as error:
@@ -66,17 +64,19 @@ class ResourceWithErrorHandling(Resource):
             error_log(error)
             return error, 500
 
+    return wrapper
+
 
 class JobsService(object):
 
-    @classmethod
-    def get_all_jobs(cls, request):
+    @service_error_handler
+    def get_all_jobs(self, request):
         return '', 200
 
-    @classmethod
-    def post_job_answer(cls, request, job_id):
+    @service_error_handler
+    def post_job_answer(self, request, job_id):
         return '', 200
 
-    @classmethod
-    def get_job_info(cls, request, job_id):
+    @service_error_handler
+    def get_job_info(self, request, job_id):
         return '', 200
