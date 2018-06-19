@@ -71,11 +71,12 @@ class JobsService(object):
 
     @service_error_handler
     def get_all_jobs(self, request):
-        error_log('running job query')
         jobs = [
             job.as_dict
             for job in JobModel.query.all()
         ]
+        if not jobs:
+            raise NotFoundNoJobsAvailableException
         return jobs, 200
 
     @service_error_handler
