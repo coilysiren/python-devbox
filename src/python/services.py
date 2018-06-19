@@ -85,4 +85,8 @@ class JobsService(object):
 
     @service_error_handler
     def get_job_info(self, request, job_id):
-        return '', 200
+        job = JobModel.query.filter_by(id=job_id).first()
+        if not job:
+            raise NotFoundJobDoesNotExistException
+        data = job.as_dict
+        return data, 200
