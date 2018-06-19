@@ -21,3 +21,16 @@ def test_jobs_none_present(test_app, session):
     # assertion
     assert response.status_code == 404
     assert json_body(response) == 'NotFoundNoJobsAvailableException'
+
+
+def test_jobs_responding_to_job_makes_it_unavailable(test_app, session):
+    # setup
+    job = JobModel.query.all()[0]
+    job.response_text = 'Cats'
+    session.add(job)
+    session.commit()
+    # function under test
+    response = test_app.get('/jobs')
+    # assertion
+    assert response.status_code == 200
+    assert len(json_body(response)) == TOTAL_SEED_JOBS - 1

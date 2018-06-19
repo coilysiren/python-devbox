@@ -73,7 +73,7 @@ class JobsService(object):
     def get_all_jobs(self, request):
         jobs = [
             job.as_dict
-            for job in JobModel.query.all()
+            for job in JobModel.query.filter_by(response_text=None)
         ]
         if not jobs:
             raise NotFoundNoJobsAvailableException
