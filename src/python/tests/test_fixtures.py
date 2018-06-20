@@ -4,8 +4,10 @@ from ..models import JobModel
 from ..server import (
     db as _db,
     app as _app,
-    TOTAL_SEED_JOBS,
 )
+
+
+TOTAL_SEED_JOBS = 20
 
 
 # ref: http://alexmic.net/flask-sqlalchemy-pytest/
